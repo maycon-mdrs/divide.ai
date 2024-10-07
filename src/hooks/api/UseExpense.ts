@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getExpenses } from "@/services/ExpenseService";
+import { getExpenses, createExpense} from "@/services/ExpenseService";
 
 export function useExpense() {
   const query = useQuery({
@@ -8,4 +8,16 @@ export function useExpense() {
   });
 
   return query;
+}
+
+export function useTransitionMutation() {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+    mutationFn: createExpense,
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['expnses-data'] });
+    },
+  });
+
+  return mutate;
 }
