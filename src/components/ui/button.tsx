@@ -19,7 +19,8 @@ const buttonVariants = cva(
           "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
         ghost: "hover:bg-accent hover:text-accent-foreground",
         link: "text-primary underline-offset-4 hover:underline",
-        divide: "bg-red-500"
+        divide: "hover:bg-divide",
+        divideActive: "bg-divide text-secondary-foreground shadow-sm hover:bg-divide/50",
       },
       size: {
         default: "h-9 px-4 py-2",
