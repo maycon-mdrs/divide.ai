@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import { HomePage } from "@/pages/home/HomePage";
 import { LoginPage } from "@/pages/login/LoginPage";
-import { PrivateRoutes } from "@/pages/PrivateRoutes";
 import MainLayout from "@/pages/layouts/MainLayout";
-import { Groups } from "./pages/groups/Groups";
+import { RegisterPage } from "@/pages/login/RegisterPage";
+import { PrivateRoutes } from "./pages/PrivateRoutes";
 
 export const router = createBrowserRouter([
   {
@@ -24,8 +24,8 @@ export const router = createBrowserRouter([
         element: <LoginPage />,
       },
       {
-        path: "/grupos",
-        element: <Groups />,
+        path: "/register",
+        element: <RegisterPage />,
       },
     ],
   },
