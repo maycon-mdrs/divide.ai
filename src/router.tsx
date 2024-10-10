@@ -4,6 +4,7 @@ import { LoginPage } from "@/pages/login/LoginPage";
 import MainLayout from "@/pages/layouts/MainLayout";
 import { RegisterPage } from "@/pages/login/RegisterPage";
 import { PrivateRoutes } from "./pages/PrivateRoutes";
+import { Groups } from "./pages/groups/Groups";
 
 export const router = createBrowserRouter([
   {
@@ -27,6 +28,14 @@ export const router = createBrowserRouter([
         path: "/register",
         element: <RegisterPage />,
       },
+      {
+        path: "/grupos",
+        element: (
+          <MainLayout>
+            <Groups />
+          </MainLayout>
+        )
+      }
     ],
   },
 ]);
