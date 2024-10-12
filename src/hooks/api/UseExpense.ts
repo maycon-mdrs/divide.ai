@@ -14,7 +14,7 @@ export function useTransitionMutation() {
   const queryClient = useQueryClient();
   const mutate = useMutation({
     mutationFn: createExpense,
-    onSettled: () => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expnses-data'] });
     },
   });

@@ -1,4 +1,4 @@
-import { api } from '@/services/Api';
+import { api } from '@/services/api';
 import { ILogin } from '@/interfaces/IUser';
 
 /**

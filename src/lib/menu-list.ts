@@ -2,13 +2,10 @@ import {
   Tag,
   Users,
   Settings,
-  CircleArrowUp,
-  CircleArrowDown,
-  ArrowDownToLine,
-  ArrowUpToLine,
-  SquarePen,
+  ArrowRightLeft,
   LayoutGrid,
-  LucideIcon
+  LucideIcon,
+  CircleDollarSign
 } from "lucide-react";
 
 type Submenu = {
@@ -36,10 +33,17 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Controle pessoal",
       menus: [
         {
-          href: "/",
+          href: "/dashboard",
           label: "Dashboard",
-          active: pathname.includes("/"),
+          active: pathname.includes("/dashboard"),
           icon: LayoutGrid,
+          submenus: []
+        },
+        {
+          href: "/previsao-ia",
+          label: "Previsão Financeira",
+          active: pathname.includes("/previsao-ia"),
+          icon: CircleDollarSign,
           submenus: []
         },
         {
@@ -50,17 +54,10 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/entradas",
-          label: "Entradas",
-          active: pathname.includes("/entradas"),
-          icon: CircleArrowUp,
-          submenus: []
-        },
-        {
-          href: "/saidas",
-          label: "Saídas",
-          active: pathname.includes("/saidas"),
-          icon: CircleArrowDown,
+          href: "/transasoes",
+          label: "Transações",
+          active: pathname.includes("/transasoes"),
+          icon: ArrowRightLeft,
           submenus: []
         },
       ]
