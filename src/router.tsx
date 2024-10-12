@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { HomePage } from "@/pages/home/HomePage";
 import { LoginPage } from "@/pages/login/LoginPage";
 import MainLayout from "@/pages/layouts/MainLayout";
@@ -8,9 +8,12 @@ import { Groups } from "./pages/groups/Groups";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
     element: <PrivateRoutes />,
     children: [
+      {
+        path: "*",
+        element: <Navigate to="/dashboard" />,
+      },
       {
         path: "/dashboard",
         element: (
@@ -18,8 +21,7 @@ export const router = createBrowserRouter([
             <HomePage />
           </MainLayout>
         )
-      }
-      ,
+      },
       {
         path: "/login",
         element: <LoginPage />,
