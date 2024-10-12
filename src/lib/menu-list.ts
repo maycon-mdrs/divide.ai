@@ -4,7 +4,8 @@ import {
   Settings,
   ArrowRightLeft,
   LayoutGrid,
-  LucideIcon
+  LucideIcon,
+  CircleDollarSign
 } from "lucide-react";
 
 type Submenu = {
@@ -36,6 +37,13 @@ export function getMenuList(pathname: string): Group[] {
           label: "Dashboard",
           active: pathname.includes("/dashboard"),
           icon: LayoutGrid,
+          submenus: []
+        },
+        {
+          href: "/previsao-ia",
+          label: "Previsão Financeira",
+          active: pathname.includes("/previsao-ia"),
+          icon: CircleDollarSign,
           submenus: []
         },
         {
