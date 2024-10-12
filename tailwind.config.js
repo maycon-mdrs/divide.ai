@@ -1,3 +1,5 @@
+import { light } from '@mui/material/styles/createPalette';
+
 /** @type {import('tailwindcss').Config} */
 export default {
 	darkMode: ["class"],
@@ -16,6 +18,10 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			colors: {
+				divide: {
+					DEFAULT: '#cde9e9',
+					light: '#cde9e980'
+				},
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {

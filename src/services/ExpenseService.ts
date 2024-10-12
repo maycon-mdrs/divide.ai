@@ -23,3 +23,10 @@ export async function getExpenses() {
     },
   ];
 }
+
+export async function createExpense(expenses: any) {
+  return {
+    id: 4,
+    ...expenses,
+  };
+}
