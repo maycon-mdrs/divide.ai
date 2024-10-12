@@ -2,11 +2,7 @@ import {
   Tag,
   Users,
   Settings,
-  CircleArrowUp,
-  CircleArrowDown,
-  ArrowDownToLine,
-  ArrowUpToLine,
-  SquarePen,
+  ArrowRightLeft,
   LayoutGrid,
   LucideIcon
 } from "lucide-react";
@@ -36,9 +32,9 @@ export function getMenuList(pathname: string): Group[] {
       groupLabel: "Controle pessoal",
       menus: [
         {
-          href: "/",
+          href: "/dashboard",
           label: "Dashboard",
-          active: pathname.includes("/"),
+          active: pathname.includes("/dashboard"),
           icon: LayoutGrid,
           submenus: []
         },
@@ -50,17 +46,10 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/entradas",
-          label: "Entradas",
-          active: pathname.includes("/entradas"),
-          icon: CircleArrowUp,
-          submenus: []
-        },
-        {
-          href: "/saidas",
-          label: "Saídas",
-          active: pathname.includes("/saidas"),
-          icon: CircleArrowDown,
+          href: "/transasoes",
+          label: "Transações",
+          active: pathname.includes("/transasoes"),
+          icon: ArrowRightLeft,
           submenus: []
         },
       ]
