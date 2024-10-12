@@ -6,6 +6,14 @@ import { RegisterPage } from "@/pages/login/RegisterPage";
 import { PrivateRoutes } from "./pages/PrivateRoutes";
 import { Groups } from "./pages/groups/Groups";
 
+function Element({ children }: { children: JSX.Element }) {
+  return (
+    <MainLayout>
+      {children}
+    </MainLayout>
+  );
+}
+
 export const router = createBrowserRouter([
   {
     element: <PrivateRoutes />,
@@ -16,11 +24,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard",
-        element: (
-          <MainLayout>
-            <HomePage />
-          </MainLayout>
-        )
+        element: <Element children={<HomePage />} />
       },
       {
         path: "/login",
@@ -32,11 +36,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/grupos",
-        element: (
-          <MainLayout>
-            <Groups />
-          </MainLayout>
-        )
+        element: <Element children={<Groups />} />
       }
     ],
   },
