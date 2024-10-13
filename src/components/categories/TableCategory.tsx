@@ -14,7 +14,7 @@ import { IconDelete } from '../icon/iconDelete';
 export function TableCategory(props: { data: any }) {
     return (
         <Table>
-            <TableCaption>Categorias</TableCaption>
+           
             <TableHeader>
                 <TableRow>
                     <TableHead className="w-2/12">Nome</TableHead>
@@ -26,20 +26,20 @@ export function TableCategory(props: { data: any }) {
             <TableBody>
                 {props.data.map((category: any) => (
                     <TableRow key={category.id}>
-                        <TableCell className="font-medium">{category.name}</TableCell>
+                        <TableCell className="">{category.name}</TableCell>
                         <TableCell>{category.description}</TableCell>
                         <TableCell>                        
                             <div className="w-5 h-5 rounded-full" style={{ backgroundColor: category.cor }}></div>
                         </TableCell>
                         <TableCell>
-                            <div className="flex space-x-2">
-                                <Button variant="link" className="text-gray" onClick={() => handleEdit(category.id)}>
+                            <div className="flex">
+                                <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(category.id)}>
                                     <FilePenLine className="w-5 h-5"/>
                                 </Button>
-                                <Button variant="destructive" onClick={() => handleDelete(category.id)}>
-                                    <Trash2 className="w-5 h-5" />
+                                <Button variant="link" onClick={() => handleDelete(category.id)}>
+                                    <Trash2 color="red" className="w-5 h-5 text-gray-50" />
                                 </Button>
-                            </div>
+                            </div>  
                         </TableCell>
                     </TableRow>
                 ))}
