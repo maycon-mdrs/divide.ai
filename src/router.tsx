@@ -3,6 +3,7 @@ import { HomePage } from "@/pages/home/HomePage";
 import { LoginPage } from "@/pages/login/LoginPage";
 import MainLayout from "@/pages/layouts/MainLayout";
 import { RegisterPage } from "@/pages/login/RegisterPage";
+import { CategoryPage } from "@/pages/category/CategoryPage";
 import { PrivateRoutes } from "./pages/PrivateRoutes";
 import { Groups } from "./pages/groups/Groups";
 
