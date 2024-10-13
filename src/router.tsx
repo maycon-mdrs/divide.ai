@@ -38,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: "/grupos",
         element: <Element children={<Groups />} />
+      },
+      {
+        path: "/categorias",
+        element: <Element children={<CategoryPage />} />
       }
     ],
   },

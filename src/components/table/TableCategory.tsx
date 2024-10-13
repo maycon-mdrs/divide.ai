@@ -7,6 +7,7 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { Trash2, FilePenLine } from 'lucide-react';
 import { Button } from "@/components/ui/button"; 
 import { IconDelete } from '../icon/iconDelete';
 
@@ -16,10 +17,10 @@ export function TableCategory(props: { data: any }) {
             <TableCaption>Categorias</TableCaption>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[100px]">Nome</TableHead>
+                    <TableHead className="w-2/12">Nome</TableHead>
                     <TableHead>Descrição</TableHead>
                     <TableHead>Cor</TableHead>
-                    <TableHead className="w-4/12">Ações</TableHead>
+                    <TableHead className="w-2/12">Ações</TableHead>
                 </TableRow>
             </TableHeader>
             <TableBody>
@@ -27,14 +28,16 @@ export function TableCategory(props: { data: any }) {
                     <TableRow key={category.id}>
                         <TableCell className="font-medium">{category.name}</TableCell>
                         <TableCell>{category.description}</TableCell>
-                        <TableCell>{category.cor}</TableCell>
+                        <TableCell>                        
+                            <div className="w-5 h-5 rounded-full" style={{ backgroundColor: category.cor }}></div>
+                        </TableCell>
                         <TableCell>
                             <div className="flex space-x-2">
                                 <Button variant="link" className="text-gray" onClick={() => handleEdit(category.id)}>
-                                    Editar
+                                    <FilePenLine className="w-5 h-5"/>
                                 </Button>
                                 <Button variant="destructive" onClick={() => handleDelete(category.id)}>
-                                    <IconDelete/>
+                                    <Trash2 className="w-5 h-5" />
                                 </Button>
                             </div>
                         </TableCell>
