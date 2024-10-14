@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { IGroupForm } from "@/interfaces/IGroup";
-import { nanoid } from "nanoid"; 
 import { message } from "antd";
 import { CategoryForm } from "./CategoryForm";
 // import { DialogCode } from "../DialogCode";
@@ -17,7 +16,6 @@ import { CategoryForm } from "./CategoryForm";
 export function DrawerNewCategory() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [groupCode, setGroupCode] = useState<string | null>(null);
   const [isLoading, setLoading] = useState(false);
 
   const handleClose = () => {
@@ -27,8 +25,6 @@ export function DrawerNewCategory() {
   const handleGroupSave = (values: IGroupForm) => {
     setLoading(true);
     setTimeout(() => {
-      const code = nanoid(8);
-      setGroupCode(code);
       setIsDialogOpen(true);
       message.success("Categoria criada com sucesso!");
       setLoading(false);

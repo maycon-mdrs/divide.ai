@@ -36,7 +36,7 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
   return (
     <Form
       form={form}
-      name="edit-group-form"
+      name="edit-category-form"
       onFinish={handleSubmit}
       layout="vertical"
       initialValues={{
