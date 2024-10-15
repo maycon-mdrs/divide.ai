@@ -1,95 +1,100 @@
-import { Category, CategoryCRUD } from '../types/Category'; 
+//import { Category, CategoryCRUD } from '../types/Category'; 
 
-export class CategoryService implements CategoryCRUD {
+import { ICategory } from '@/interfaces/ICategory';
 
-    async getAllCategories(token: string): Promise<Category[]> {
-        console.log(token);
-        const response = await fetch('http://localhost:8080/categories', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`, 
-                'Content-Type': 'application/json'
-            }
-        });
-    
-        if (!response.ok) {
-            throw new Error('Failed to fetch categories');
+
+export async function getAllCategories(): Promise<ICategory[]> {
+    // const token = localStorage.getItem('token');
+    const token = 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjUyIiwic3ViIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3MjkwMDA3NjYsImV4cCI6MTcyOTAwNDM2Nn0.X5d1ouHympO8qlViHQSbiTHFvE8ntosyHimzb5E4jnw';
+    const response = await fetch('http://localhost:8080/categories', {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
-    
-        const data: Category[] = await response.json();
-        console.log(data);
-        return data;
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to fetch categories');
     }
 
-    async getCategoryById(id: number, token: string): Promise<Category | null> {
-        const response = await fetch(`http://localhost:8080/categories/${id}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`, 
-                'Content-Type': 'application/json'
-            }
-        });
+    const data: ICategory[] = await response.json();
+    console.log(data);
+    return data;
+}
 
-        if (!response.ok) {
-            return null; 
+export async function getCategoryById(id: number): Promise<ICategory | null> {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:8080/categories/${id}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
+    });
 
-        const category: Category = await response.json();
-        return category;
+    if (!response.ok) {
+        return null;
     }
 
-    async createCategory(category: Omit<Category, 'id' | 'creationDate'>, token: string): Promise<Category> {
-        const response = await fetch('http://localhost:8080/categories', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                ...category,
-                creationDate: new Date() 
-            })
-        });
+    const category: ICategory = await response.json();
+    return category;
+}
 
-        if (!response.ok) {
-            throw new Error('Failed to create category');
-        }
+export async function createCategory(category: Omit<ICategory, 'id' | 'creationDate'>): Promise<ICategory> {
+    const token = localStorage.getItem('token');
+    const response = await fetch('http://localhost:8080/categories', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            ...category,
+            creationDate: new Date()
+        })
+    });
 
-        const newCategory: Category = await response.json();
-        return newCategory;
+    if (!response.ok) {
+        throw new Error('Failed to create category');
     }
 
-    
-    async updateCategory(id: number, category: Partial<Omit<Category, 'id' | 'creationDate'>>, token: string): Promise<Category | null> {
-        const response = await fetch(`http://localhost:8080/categories/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(category)
-        });
+    const newCategory: ICategory = await response.json();
+    return newCategory;
+}
 
-        if (!response.ok) {
-            return null; 
-        }
 
-        const updatedCategory: Category = await response.json();
-        return updatedCategory;
+export async function updateCategory(id: number, category: Partial<Omit<ICategory, 'id'>>): Promise<ICategory | null> {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:8080/categories/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(category)
+    });
+
+    if (!response.ok) {
+        return null;
     }
 
-    
-    async deleteCategory(id: number, token: string): Promise<void> {
-        const response = await fetch(`http://localhost:8080/categories/${id}`, {
-            method: 'DELETE',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
+    const updatedCategory: ICategory = await response.json();
+    return updatedCategory;
+}
 
-        if (!response.ok) {
-            throw new Error('Failed to delete category');
+
+export async function deleteCategory(id: number): Promise<void> {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`http://localhost:8080/categories/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
         }
+    });
+
+    if (!response.ok) {
+        throw new Error('Failed to delete category');
     }
 }

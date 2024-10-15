@@ -2,47 +2,47 @@ import { TableCategory } from "@/components/categories/TableCategory"
 import { SheetMenu } from "@/components/global/sidebar/SheetMenu";
 import { DrawerNewCategory } from "@/components/categories/DrawerNewCategory";
 import React, { useEffect, useState } from 'react';
-import { CategoryService } from '../../services/CategoryService'; 
-import { Category } from '../../types/Category';
-
-
+import { useCategoryData } from "@/hooks/category/categoryHook";
+import { ICategory } from "@/interfaces/ICategory";
 
 
 export function CategoryPage() {
-	const [categories, setCategories] = useState<Category[]>([]); 
-    const [loading, setLoading] = useState<boolean>(true); 
-    const [error, setError] = useState<string | null>(null); 
+	// const [categories, setCategories] = useState<Category[]>([]); 
+    // const [loading, setLoading] = useState<boolean>(true); 
+    // const [error, setError] = useState<string | null>(null); 
+
+    const { data } = useCategoryData();
 
 
-    const loadCategories = async () => {
-        const categoryService = new CategoryService();
-        const token = localStorage.getItem('token'); 
+    // const loadCategories = async () => {
+    //     const categoryService = new CategoryService();
+    //     const token = localStorage.getItem('token'); 
 
-        if (!token) {
-            try {
-                const data = await categoryService.getAllCategories('eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjUyIiwic3ViIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3Mjg5NjU1OTMsImV4cCI6MTcyODk2OTE5M30.kprlzGb7TE6uQLlAEnRPJMKW4tr39ZneAk6ufPsf6MI'); 
-                setCategories(data); 
-                setLoading(false);
-            } catch (err) {
-                setError('Failed to fetch categories'); 
-                setLoading(false);
-            }
-        } else {
-            setError('No token found');
-            setLoading(false);
-        }
-    };
-
-    
-    useEffect(() => {
-        loadCategories();
-    }, []); 
-
+    //     if (!token) {
+    //         try {
+    //             const data = await categoryService.getAllCategories(); 
+    //             setCategories(data); 
+    //             setLoading(false);
+    //         } catch (err) {
+    //             setError('Failed to fetch categories'); 
+    //             setLoading(false);
+    //         }
+    //     } else {
+    //         setError('No token found');
+    //         setLoading(false);
+    //     }
+    // };
 
     
-    if (error) {
-        return <div>Error: {error}</div>;
-    }
+    // useEffect(() => {
+    //     loadCategories();
+    // }, []); 
+
+
+    
+    // if (error) {
+    //     return <div>Error: {error}</div>;
+    // }
 
 	return (
 		<div className="flex-1 space-y-4 p-4 pt-6 lg:mx-10">
@@ -55,7 +55,7 @@ export function CategoryPage() {
 			</div>
 						
 			<div className="p-4 flex justify-center rounded-xl border bg-card text-card-foreground shadow" >
-				<TableCategory data={categories} />
+				<TableCategory data={data || []} />
 			</div>
 		</div>
 	);
