@@ -20,7 +20,7 @@ export function CategoryPage() {
 
         if (!token) {
             try {
-                const data = await categoryService.getAllCategories('eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjUyIiwic3ViIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3Mjg5NjE3MDgsImV4cCI6MTcyODk2NTMwOH0.rMC8BH4fQE1HuASQ6EqbfdGQRooVrSHiJ-aLYV44ZD8'); 
+                const data = await categoryService.getAllCategories('eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjUyIiwic3ViIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3Mjg5NjU1OTMsImV4cCI6MTcyODk2OTE5M30.kprlzGb7TE6uQLlAEnRPJMKW4tr39ZneAk6ufPsf6MI'); 
                 setCategories(data); 
                 setLoading(false);
             } catch (err) {

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { LoadingOutlined } from '@ant-design/icons';
 import { ICategoryForm } from "@/interfaces/ICategory";
 import { CirclePicker, ColorResult } from 'react-color';
+import { CategoryService } from '../../services/CategoryService'; 
+import { Category } from '../../types/Category';
 
 interface CategoryFormProps {
   initialData?: ICategoryForm | null;
@@ -15,7 +17,6 @@ interface CategoryFormProps {
 
 export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormProps) {
   const [form] = Form.useForm();
-
   const [selectedColor, setSelectedColor] = useState<string>('#fff');
 
   useEffect(() => {

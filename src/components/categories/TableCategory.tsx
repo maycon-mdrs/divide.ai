@@ -8,9 +8,35 @@ import {
 } from "@/components/ui/table";
 import { Trash2, FilePenLine } from 'lucide-react';
 import { Button } from "@/components/ui/button"; 
+import { useState } from "react";
+import { CategoryService } from '../../services/CategoryService';
+import { Category } from '../../types/Category';
 
 
-export function TableCategory(props: { data: any }) {
+export function TableCategory(props: { data: Category[] }) {
+    const [categories, setCategories] = useState<Category[]>(props.data);
+    const [loading, setLoading] = useState(false);  
+    const [error, setError] = useState<string | null>(null);  
+
+    const handleEdit = (id: any) => {
+        console.log(`Editando categoria com ID: ${id}`);
+    };
+
+    const handleDelete = async (id: any) => {
+        const categoryService = new CategoryService();
+        setLoading(true);
+
+        try {
+            await categoryService.deleteCategory(id, 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjUyIiwic3ViIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3Mjg5NjU1OTMsImV4cCI6MTcyODk2OTE5M30.kprlzGb7TE6uQLlAEnRPJMKW4tr39ZneAk6ufPsf6MI');
+            setCategories(categories.filter((category: Category) => category.id !== id));
+            setLoading(false);
+        } catch (error: any) {
+            setLoading(false);
+            setError('Erro ao excluir categoria');
+            console.error(error);
+        }
+    };
+
     return (
         <Table>
            
