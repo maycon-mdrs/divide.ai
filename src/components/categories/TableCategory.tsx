@@ -1,7 +1,6 @@
 import {
     Table,
     TableBody,
-    TableCaption,
     TableCell,
     TableHead,
     TableHeader,
@@ -9,7 +8,7 @@ import {
 } from "@/components/ui/table";
 import { Trash2, FilePenLine } from 'lucide-react';
 import { Button } from "@/components/ui/button"; 
-import { IconDelete } from '../icon/iconDelete';
+
 
 export function TableCategory(props: { data: any }) {
     return (
@@ -29,7 +28,7 @@ export function TableCategory(props: { data: any }) {
                         <TableCell className="">{category.name}</TableCell>
                         <TableCell>{category.description}</TableCell>
                         <TableCell>                        
-                            <div className="w-5 h-5 rounded-full" style={{ backgroundColor: category.cor }}></div>
+                            <div className="w-5 h-5 rounded-full" style={{ backgroundColor: category.color }}></div>
                         </TableCell>
                         <TableCell>
                             <div className="flex">
