@@ -55,7 +55,7 @@ export function CategoryPage() {
 			</div>
 						
 			<div className="p-4 flex justify-center rounded-xl border bg-card text-card-foreground shadow" >
-				<TableCategory data={data || []} />
+				<TableCategory />
 			</div>
 		</div>
 	);

@@ -4,34 +4,44 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LoadingOutlined } from '@ant-design/icons';
-import { ICategoryForm } from "@/interfaces/ICategory";
+import { ICategory } from "@/interfaces/ICategory";
 import { CirclePicker, ColorResult } from 'react-color';
-import { CategoryService } from '../../services/CategoryService'; 
-import { Category } from '../../types/Category';
+import { useCategoryMutate } from "@/hooks/category/categoryHook";
+
 
 interface CategoryFormProps {
-  initialData?: ICategoryForm | null;
-  onSubmit: (values: ICategoryForm) => void;
+  initialData?: ICategory | null; 
+  onSubmit: (values: ICategory) => void;
   isLoading: boolean;
 }
 
 export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormProps) {
   const [form] = Form.useForm();
-  const [selectedColor, setSelectedColor] = useState<string>('#fff');
-
+  const [selectedColor, setSelectedColor] = useState<string>(initialData?.color || '#fff');
+  
   useEffect(() => {
     if (initialData) {
-      form.setFieldsValue(initialData);
+      form.setFieldsValue({
+        name: initialData.name,
+        description: initialData.description,
+        color: initialData.color,
+      });
+      setSelectedColor(initialData.color); 
     }
   }, [initialData, form]);
-
-  const handleSubmit = (values: ICategoryForm) => {
-    onSubmit(values);
-  };
 
   const handleColorChangeComplete = (color: ColorResult) => {
     setSelectedColor(color.hex); 
     form.setFieldsValue({ color: color.hex }); 
+  };
+
+  const handleSubmit = (values: ICategory) => {
+    const data: ICategory = {
+      name: values.name,
+      description: values.description,
+      color: selectedColor,
+    };
+    onSubmit(data);
   };
 
   return (
@@ -41,16 +51,16 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
       onFinish={handleSubmit}
       layout="vertical"
       initialValues={{
-        name: '',
-        description: '',
-        color: selectedColor  
+        name: initialData?.name || '',
+        description: initialData?.description || '',
+        color: selectedColor,
       }}
     >
       <Label htmlFor="name" className="font-medium">Nome da Categoria</Label>
       <Form.Item
         name="name"
         className="text-primary m-0 mt-1 mb-2"
-        rules={[{ required: true, message: 'Por favor, insira o nome do grupo!' }]}
+        rules={[{ required: true, message: 'Por favor, insira o nome da categoria!' }]}
       >
         <Input id="name" />
       </Form.Item>
@@ -72,8 +82,8 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
       >
         <div style={{ width: '100%' }}>
           <CirclePicker
-            color={selectedColor}  
-            onChangeComplete={handleColorChangeComplete}  
+            color={selectedColor}
+            onChangeComplete={handleColorChangeComplete}
             width="100%"
           />
         </div>

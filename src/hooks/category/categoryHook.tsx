@@ -22,17 +22,17 @@ export function useCategoryMutate() {
     return mutate;
 }
 
-// export function useCategoryUpdate() {
-//     const queryClient = useQueryClient();
-//     const mutate = useMutation({
-//         mutationFn:  updateCategory,
-//         onSuccess: () => {  
-//             queryClient.invalidateQueries({ queryKey: ['categories-data'] });
-//         }
-//     });
+export function useCategoryUpdate() {
+    const queryClient = useQueryClient();
+    const mutate = useMutation({
+        mutationFn:  updateCategory,
+        onSuccess: () => {  
+            queryClient.invalidateQueries({ queryKey: ['categories-data'] });
+        }
+    });
 
-//     return mutate;
-// }
+    return mutate;
+}
 
 export function useCategoryDelete() {
     const queryClient = useQueryClient();

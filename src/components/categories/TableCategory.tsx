@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
     Table,
     TableBody,
@@ -6,78 +7,111 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Trash2, FilePenLine } from 'lucide-react';
-import { Button } from "@/components/ui/button"; 
-import { useState } from "react";
-// import { CategoryService } from '../../services/CategoryService';
+import { useCategoryData, useCategoryDelete } from "@/hooks/category/categoryHook";
 import { ICategory } from '@/interfaces/ICategory';
+import { DrawerCategory } from "./DrawerEditCategory"; 
 
-export function TableCategory(props: { data?: any[] }) {
-    const { data = [] } = props;
-    // const [categories, setCategories] = useState<Category[]>(props.data);
-    // const [loading, setLoading] = useState(false);  
-    // const [error, setError] = useState<string | null>(null);  
 
-    // const handleEdit = (id: any) => {
-    //     console.log(`Editando categoria com ID: ${id}`);
-    // };
+export function TableCategory() {
+    const { data } = useCategoryData();
+    const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    // const handleDelete = async (id: any) => {
-    //     const categoryService = new CategoryService();
-    //     setLoading(true);
+    const handleEdit = (category: ICategory) => {
+        setSelectedCategory(category); 
+        setIsDrawerOpen(true); 
+    };
 
-    //     try {
-    //         await categoryService.deleteCategory(id, 'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjUyIiwic3ViIjoidXNlckBnbWFpbC5jb20iLCJpYXQiOjE3Mjg5NjU1OTMsImV4cCI6MTcyODk2OTE5M30.kprlzGb7TE6uQLlAEnRPJMKW4tr39ZneAk6ufPsf6MI');
-    //         setCategories(categories.filter((category: Category) => category.id !== id));
-    //         setLoading(false);
-    //     } catch (error: any) {
-    //         setLoading(false);
-    //         setError('Erro ao excluir categoria');
-    //         console.error(error);
-    //     }
-    // };
+    const handleDrawerClose = () => {
+        setIsDrawerOpen(false);
+        setSelectedCategory(null); 
+    };
 
     return (
-        <Table>
-           
-            <TableHeader>
-                <TableRow>
-                    <TableHead className="w-2/12">Nome</TableHead>
-                    <TableHead>Descrição</TableHead>
-                    <TableHead>Cor</TableHead>
-                    <TableHead className="w-2/12">Ações</TableHead>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {data.map((category: any) => (
-                    <TableRow key={category.id}>
-                        <TableCell className="">{category.name}</TableCell>
-                        <TableCell>{category.description}</TableCell>
-                        <TableCell>                        
-                            <div className="w-5 h-5 rounded-full" style={{ backgroundColor: category.color }}></div>
-                        </TableCell>
-                        <TableCell>
-                            <div className="flex">
-                                <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(category.id)}>
-                                    <FilePenLine className="w-5 h-5"/>
-                                </Button>
-                                <Button variant="link" onClick={() => handleDelete(category.id)}>
-                                    <Trash2 color="red" className="w-5 h-5 text-gray-50" />
-                                </Button>
-                            </div>  
-                        </TableCell>
+        <>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-2/12">Nome</TableHead>
+                        <TableHead>Descrição</TableHead>
+                        <TableHead>Cor</TableHead>
+                        <TableHead className="w-2/12">Ações</TableHead>
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                </TableHeader>
+                <TableBody>
+                    {data?.map((category: ICategory) => (
+                        <TableRow key={category.id}>
+                            <TableCell>{category.name}</TableCell>
+                            <TableCell>{category.description}</TableCell>
+                            <TableCell>
+                                <div className="w-5 h-5 rounded-full" style={{ backgroundColor: category.color }}></div>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex">
+                                    <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(category)}>
+                                        <FilePenLine className="w-5 h-5" />
+                                    </Button>
+                                    <ButtonDelete category={category} />
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+
+            {/* Drawer para edição */}
+            {selectedCategory && (
+                <DrawerCategory
+                    initialCategory={selectedCategory} 
+                    isOpen={isDrawerOpen} 
+                    onClose={handleDrawerClose} 
+                />
+            )}
+        </>
     );
 }
 
+function ButtonDelete({ category }: { category: ICategory }) {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const { mutate, isSuccess } = useCategoryDelete();
 
-function handleEdit(id: any) {
-    console.log(`Editando categoria com ID: ${id}`);
-}
+    const handleClose = () => {
+        setIsModalOpen(prev => !prev);
+    };
 
-function handleDelete(id: any) {
-    console.log(`Excluindo categoria com ID: ${id}`);
+    useEffect(() => {
+        handleClose();
+    }, [isSuccess]);
+
+    return (
+        <Dialog open={isModalOpen} onOpenChange={handleClose}>
+            <DialogTrigger asChild>
+                <div className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent hover:text-accent-foreground">
+                    <Trash2 color="red" className="w-5 h-5 text-gray-50" />
+                </div>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Você tem certeza dessa ação?</DialogTitle>
+                    <DialogDescription>
+                        Esta ação não pode ser desfeita. Isso excluirá permanentemente sua categoria e suas dívidas/entradas associadas a esta categoria.
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <Button variant="destructive" onClick={() => mutate(category.id!)}>Deletar</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    );
 }
