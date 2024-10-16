@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { LoadingOutlined } from '@ant-design/icons';
 import { ICategory } from "@/interfaces/ICategory";
 import { CirclePicker, ColorResult } from 'react-color';
-import { useCategoryMutate } from "@/hooks/category/categoryHook";
 
 
 interface CategoryFormProps {

@@ -1,5 +1,3 @@
-//import { Category, CategoryCRUD } from '../types/Category'; 
-
 import { ICategory } from '@/interfaces/ICategory';
 
 

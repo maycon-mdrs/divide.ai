@@ -6,7 +6,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { Button } from "@/components/ui/button";
 import { ICategory } from "@/interfaces/ICategory";
 import { CategoryForm } from "./CategoryForm";
 import { message } from "antd";
