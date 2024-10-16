@@ -20,22 +20,23 @@ import { Button } from "@/components/ui/button";
 import { Trash2, FilePenLine } from 'lucide-react';
 import { useCategoryData, useCategoryDelete } from "@/hooks/category/categoryHook";
 import { ICategory } from '@/interfaces/ICategory';
-import { DrawerCategory } from "./DrawerEditCategory"; 
+import { DrawerCategory } from "./DrawerEditCategory";
 
 
 export function TableCategory() {
     const { data } = useCategoryData();
+
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const handleEdit = (category: ICategory) => {
-        setSelectedCategory(category); 
-        setIsDrawerOpen(true); 
+        setSelectedCategory(category);
+        setIsDrawerOpen(true);
     };
 
     const handleDrawerClose = () => {
         setIsDrawerOpen(false);
-        setSelectedCategory(null); 
+        setSelectedCategory(null);
     };
 
     return (
@@ -50,7 +51,7 @@ export function TableCategory() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((category: ICategory) => (
+                    {Array.isArray(data) && data.map((category: ICategory) => (
                         <TableRow key={category.id}>
                             <TableCell>{category.name}</TableCell>
                             <TableCell>{category.description}</TableCell>
@@ -73,9 +74,9 @@ export function TableCategory() {
             {/* Drawer para edição */}
             {selectedCategory && (
                 <DrawerCategory
-                    initialCategory={selectedCategory} 
-                    isOpen={isDrawerOpen} 
-                    onClose={handleDrawerClose} 
+                    initialCategory={selectedCategory}
+                    isOpen={isDrawerOpen}
+                    onClose={handleDrawerClose}
                 />
             )}
         </>
