@@ -193,7 +193,7 @@ export function FormsTransition({ date, onClose }: { date: Date | undefined; onC
         </ToggleGroup>
       </Form.Item>
 
-      <Button type="submit" className="w-full mt-5" >
+      <Button type="submit" variant="divideDark" className="w-full mt-5" >
         {isPending ? loadingIcon : 'Adicionar'}
       </Button>
     </Form>

@@ -8,17 +8,20 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 import '@/index.css'
 import { SidebarProvider } from './hooks/UseSidebarToggle';
+import { AuthProvider } from '@/context/AuthProvider';
 
 const client = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
-      <SidebarProvider>
-        <QueryClientProvider client={client}>
-          <RouterProvider router={router} />
-        </QueryClientProvider>
-      </SidebarProvider>
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+        <SidebarProvider>
+          <QueryClientProvider client={client}>
+            <RouterProvider router={router} />
+          </QueryClientProvider>
+        </SidebarProvider>
+      </ThemeProvider>
+    </AuthProvider>
   </StrictMode>
 )

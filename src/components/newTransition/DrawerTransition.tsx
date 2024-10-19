@@ -34,7 +34,7 @@ export function DrawerTransition() {
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen} onClose={handleClose}>
       <DrawerTrigger asChild onClick={() => setIsOpen(true)}>
-        <Button>Nova transação</Button>
+        <Button variant="divideDark">Nova transação</Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-lg">

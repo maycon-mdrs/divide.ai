@@ -37,7 +37,7 @@ export function DrawerNewCategory() {
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen} onClose={handleClose}>
       <DrawerTrigger asChild onClick={() => setIsOpen(true)}>
-        <Button className="bg-[#29756F] hover:bg-[#29756F] shadow-lg">Nova Categoria</Button>
+        <Button variant="divideDark">Nova Categoria</Button>
       </DrawerTrigger>
       <DrawerContent>
         <div className="mx-auto w-full max-w-lg flex flex-col justify-center">

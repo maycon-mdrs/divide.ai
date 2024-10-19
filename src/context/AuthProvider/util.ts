@@ -20,10 +20,14 @@ export function deleteUserLocalStorage() {
  * @returns The stored user information, or null if no user is stored.
  */
 export function getUserLocalStorage() {
-  const json = localStorage.getItem("u");
+  try {
+    const json = localStorage.getItem("u");
+    if (!json) return null;
 
-  if (!json) return null;
-
-  const user = JSON.parse(json);
-  return user ?? null;
+    const user: IUser = JSON.parse(json);
+    return user ?? null;
+  } catch (error) {
+    // console.error("Failed to parse user from localStorage", error);
+    return null;
+  }
 }

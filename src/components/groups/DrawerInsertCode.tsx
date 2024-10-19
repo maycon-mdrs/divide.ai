@@ -64,7 +64,7 @@ export function DrawerInsertCode() {
                         <Input id="code" />
                     </Form.Item>
 
-                    <Button type="submit" className="w-full mt-4">
+                    <Button variant="divideDark" type="submit" className="w-full mt-4">
                         Inserir
                     </Button>
                 </Form>

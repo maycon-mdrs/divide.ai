@@ -8,6 +8,14 @@ export interface ILogin {
     password: string;
 }
 
+export interface IUserRegister {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    phoneNumber: string;
+}
+
 export interface IUserCard {
     id: number;
     firstName: string;

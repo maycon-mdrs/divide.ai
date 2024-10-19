@@ -12,6 +12,7 @@ import {
   TooltipProvider
 } from "@/components/ui/tooltip";
 import { getMenuList } from "@/lib/menu-list";
+import { useAuth } from "@/context/AuthProvider/useAuth";
 
 interface MenuProps {
   isOpen: boolean | undefined;
@@ -21,6 +22,12 @@ export function Menu({ isOpen }: MenuProps) {
   const pathname = useLocation().pathname;
   const menuList = getMenuList(pathname);
   const navigate = useNavigate();
+  const auth = useAuth();
+
+  const handleLogout = () => {
+    auth.logout();
+    navigate("/login");
+  };
 
   return (
     <ScrollArea className="[&>div>div[style]]:!block">
@@ -106,7 +113,7 @@ export function Menu({ isOpen }: MenuProps) {
               <Tooltip delayDuration={100}>
                 <TooltipTrigger asChild>
                   <Button
-                    onClick={() => {navigate("/login")}}
+                    onClick={handleLogout}
                     variant="destructive"
                     className="w-full justify-center h-10 mt-5"
                   >

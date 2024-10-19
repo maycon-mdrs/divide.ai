@@ -36,6 +36,7 @@ export function DialogCode({ isOpen, groupCode, onClose }: DialogCodeProps) {
             <Input id="groupCode" defaultValue={groupCode} readOnly />
           </div>
           <Button
+            variant="divideDark"
             type="button"
             size="sm"
             className="px-3"

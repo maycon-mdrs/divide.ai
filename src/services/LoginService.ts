@@ -1,5 +1,7 @@
 import { api } from '@/services/api';
-import { ILogin } from '@/interfaces/IUser';
+import { ILogin, IUserRegister } from '@/interfaces/IUser';
+import { ApiResponse } from '@/interfaces/ICategory';
+import { User } from '@/types/User';
 
 /**
  * Sends a login request to the server.
@@ -9,14 +11,27 @@ import { ILogin } from '@/interfaces/IUser';
  */
 export async function LoginRequest(login: ILogin) {
   try {
-    const response = await api.post('/login/', login);
-    return response.data;
+    const response = await api.post<ApiResponse<any>>('/auth/authenticate', login);
+
+    if (response.data.success) return response.data.data;
+    return null;
   } catch (error) {
     console.log(error);
     throw error;
   }
 }
 
+export async function RegisterRequest(register: IUserRegister) {
+  try {
+    const response = await api.post<ApiResponse<User>>('/users/register', register);
+
+    if (response.data.success) return response.data.data;
+    return null;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
 
 /**
  * Retrieves the user profile from the server.

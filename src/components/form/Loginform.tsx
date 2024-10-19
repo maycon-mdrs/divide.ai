@@ -1,17 +1,15 @@
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGoogle, faApple, faFacebook } from "@fortawesome/free-brands-svg-icons";
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { IconLogin } from '../icon/IconLogin';
-
-interface FormData {
-    email: string;
-    password: string;
-}
+import { useLoginMutate } from "@/hooks/authentication/UseLogin";
+import { message } from "antd";
+import { ILogin } from "@/interfaces/IUser";
 
 export function LoginForm() {
-    const [formData, setFormData] = useState<FormData>({ email: '', password: '' });
-
+    const [formData, setFormData] = useState<ILogin>({ email: '', password: '' });
+    const { mutate, isSuccess } = useLoginMutate();
+    const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -21,11 +19,21 @@ export function LoginForm() {
         }));
     };
 
-
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        console.log(formData);
+        try {
+            mutate(formData);
+        } catch (error) {
+            console.error(error);
+        }
     };
+
+    useEffect(() => {
+        if (isSuccess) {
+            navigate('/dashboard');
+            message.success("Login successful!");
+        }
+    }, [isSuccess]);
 
     return (
         <div className="bg-[#fff]  shadow-xl w-5/12 h-[573px] flex flex-col items-center justify-center max-lg:h-full max-lg:w-full">

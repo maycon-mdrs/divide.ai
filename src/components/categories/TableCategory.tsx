@@ -46,8 +46,8 @@ export function TableCategory() {
                     <TableRow>
                         <TableHead className="w-2/12">Nome</TableHead>
                         <TableHead>Descrição</TableHead>
-                        <TableHead>Cor</TableHead>
-                        <TableHead className="w-2/12">Ações</TableHead>
+                        <TableHead className="text-center">Cor</TableHead>
+                        <TableHead className="text-center">Ações</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -56,10 +56,12 @@ export function TableCategory() {
                             <TableCell>{category.name}</TableCell>
                             <TableCell>{category.description}</TableCell>
                             <TableCell>
-                                <div className="w-5 h-5 rounded-full" style={{ backgroundColor: category.color }}></div>
+                                <div className="flex justify-center">
+                                    <span className=" w-5 h-5 rounded-full" style={{ backgroundColor: category.color }}></span>
+                                </div>
                             </TableCell>
                             <TableCell>
-                                <div className="flex">
+                                <div className="flex justify-center">
                                     <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(category)}>
                                         <FilePenLine className="w-5 h-5" />
                                     </Button>
@@ -88,17 +90,20 @@ function ButtonDelete({ category }: { category: ICategory }) {
     const { mutate, isSuccess } = useCategoryDelete();
 
     const handleClose = () => {
-        setIsModalOpen(prev => !prev);
+        setIsModalOpen(false);
     };
 
-    useEffect(() => {
-        handleClose();
-    }, [isSuccess]);
+    const handleDelete = () => {
+        mutate(category.id!);
+        if (isSuccess) {
+            handleClose();
+        }
+    };
 
     return (
-        <Dialog open={isModalOpen} onOpenChange={handleClose}>
+        <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
             <DialogTrigger asChild>
-                <div className="relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent hover:text-accent-foreground">
+                <div className="cursor-pointer relative flex select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 hover:bg-accent hover:text-accent-foreground">
                     <Trash2 color="red" className="w-5 h-5 text-gray-50" />
                 </div>
             </DialogTrigger>
@@ -110,7 +115,8 @@ function ButtonDelete({ category }: { category: ICategory }) {
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                    <Button variant="destructive" onClick={() => mutate(category.id!)}>Deletar</Button>
+                    <Button variant="secondary" onClick={handleClose}>Cancelar</Button>
+                    <Button variant="destructive" onClick={handleDelete}>Deletar</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
