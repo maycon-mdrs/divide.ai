@@ -24,3 +24,10 @@ export interface IAuthProvider {
    */
   children: JSX.Element;
 }
+
+export interface IJwtPayload {
+  id: number;
+  sub: string;
+  iat: number;
+  exp: number;
+}

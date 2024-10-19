@@ -1,4 +1,7 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "@/context/AuthProvider/useAuth";
+import { initializeAxios } from "@/services/api";
+import { useEffect } from "react";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 
 /**
  * Componente que define rotas privadas baseadas na autenticação do usuário.
@@ -6,8 +9,15 @@ import { Navigate, Outlet } from "react-router-dom";
  * caso contrário, redireciona para a página de login.
  */
 export function PrivateRoutes() {
+	const auth = useAuth();
+	const navigate = useNavigate();
 
-	return true ? <Outlet /> : <Navigate to='/login' />;
+  useEffect(() => {
+    // Initialize Axios with a callback function to redirect
+    initializeAxios(() => navigate('/login'));
+  }, [navigate]);
+
+	return auth.token ? <Outlet /> : <Navigate to='/login' />;
 }
 
 /* https://medium.com/@dennisivy/creating-protected-routes-with-react-router-v6-2c4bbaf7bc1c */

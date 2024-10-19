@@ -1,7 +1,8 @@
+import { jwtDecode } from "jwt-decode";
 import { createContext, useState } from "react";
 import { IUser } from "@/interfaces/IUser";
-import { IAuthProvider, IContext } from "@/context/AuthProvider/types";
-import { setUserLocalStorage, getUserLocalStorage } from "@/context/AuthProvider/util";
+import { IAuthProvider, IContext, IJwtPayload } from "@/context/AuthProvider/types";
+import { setUserLocalStorage, getUserLocalStorage, deleteUserLocalStorage } from "@/context/AuthProvider/util";
 import { LoginRequest } from "@/services/LoginService";
 
 // Creation of an authentication context with empty initial values.
@@ -25,7 +26,8 @@ export function AuthProvider({ children }: IAuthProvider) {
   async function authenticate(email: string, password: string) {
     const response = await LoginRequest({ email, password });
 
-    const payload = { token: response.tokens.access, email };
+    const decodedToken = jwtDecode<IJwtPayload>(response.token);
+    const payload = { token: response.token, id: decodedToken.id, email: decodedToken.sub };
 
     setUser(payload);
     setUserLocalStorage(payload);
@@ -37,6 +39,7 @@ export function AuthProvider({ children }: IAuthProvider) {
   function logout() {
     setUser({} as IUser);
     setUserLocalStorage(null);
+    deleteUserLocalStorage();
   }
 
   return (

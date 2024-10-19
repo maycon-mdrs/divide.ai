@@ -1,28 +1,24 @@
 
-import React, { useState } from "react";
+import { useRegisterMutate } from "@/hooks/authentication/UseRegister";
+import { IUserRegister } from "@/interfaces/IUser";
+import { message } from "antd";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface RegisterProps {
   hidden?: string; 
 }
 
-interface FormData {
-  name: string;
-  lastName: string;
-  email: string;
-  password: string;
-  phone_number: string;
-}
-
 const SignUpForm: React.FC<RegisterProps> = (props) => {
+  const { mutate, isSuccess } = useRegisterMutate();
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState<FormData>({
-    name: "",
+  const [formData, setFormData] = useState<IUserRegister>({
+    firstName: "",
     lastName: "",
     email: "",
     password: "",
-    phone_number: "",
+    phoneNumber: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,33 +34,24 @@ const SignUpForm: React.FC<RegisterProps> = (props) => {
 
     const newFormData = {
       email: formData.email,
-      firstName: formData.name,
+      firstName: formData.firstName,
       lastName: formData.lastName, 
       password: formData.password,
-      phoneNumber: formData.phone_number,
+      phoneNumber: formData.phoneNumber,
     };
-
-    
-
     try {
-      const response = await fetch("http://localhost:8080/users/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json", 
-        },
-        body: JSON.stringify(newFormData),
-      });
-    
-      if (!response.ok) {
-        throw new Error("Erro ao registrar o usuário");
-      }
-    
-      console.log("User registered successfully");
-      navigate("/");
-    } catch (error) {
-      console.error("There was an error registering the user!", error);
+      mutate(newFormData);
+    } catch {
+      console.error("Error");
     }
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/login");
+      message.success("Cadastro realizado com sucesso!");
+    }
+  }, [isSuccess]);
 
   return (
     <div
@@ -77,7 +64,7 @@ const SignUpForm: React.FC<RegisterProps> = (props) => {
       
         <input
           type="text"
-          name="name"
+          name="firstName"
           className="w-9/12 h-[46px] mx-[auto] mb-[15px] px-[20px] bg-[#F1F0F3] text-[#6C6A6A] font-regular border-solid border-2 border-[#6C6A6A]/[.6] hover:border-[#6C6A6A] focus:border-[#6C6A6A] outline-none rounded-lg placeholder:text-[#6C6A6A] placeholder:font-regular max-md:mx-[25px] max-lg:w-8/12 max-lg:bg-[#fff]"
           placeholder="Nome"
           onChange={handleChange}
@@ -105,7 +92,7 @@ const SignUpForm: React.FC<RegisterProps> = (props) => {
         />
         <input
           type="text"
-          name="phone_number"
+          name="phoneNumber"
           className="w-9/12 h-[46px] mx-[auto] mb-[15px] px-[20px] bg-[#F1F0F3] text-[#6C6A6A] font-regular border-solid border-2 border-[#6C6A6A]/[.6] hover:border-[#6C6A6A] focus:border-[#6C6A6A] outline-none rounded-lg placeholder:text-[#6C6A6A] placeholder:font-regular max-md:mx-[25px] max-lg:w-8/12 max-lg:bg-[#fff]"
           placeholder="Celular"
           onChange={handleChange}

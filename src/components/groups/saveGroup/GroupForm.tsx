@@ -53,7 +53,7 @@ export function GroupForm({ initialData, onSubmit, isLoading }: GroupFormProps) 
         <Input id="description" />
       </Form.Item>
 
-      <Button type="submit" className="w-full mt-4" disabled={isLoading}>
+      <Button type="submit" variant="divideDark" className="w-full mt-4" disabled={isLoading}>
         {isLoading ? <LoadingOutlined spin /> : 'Salvar'}
       </Button>
     </Form>

@@ -20,6 +20,7 @@ export default {
 			colors: {
 				divide: {
 					DEFAULT: '#cde9e9',
+					dark: "#29756F",
 					light: '#cde9e980'
 				},
 				background: 'hsl(var(--background))',
