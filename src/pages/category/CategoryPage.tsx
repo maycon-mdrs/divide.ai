@@ -2,8 +2,6 @@ import { TableCategory } from "@/components/categories/TableCategory"
 import { SheetMenu } from "@/components/global/sidebar/SheetMenu";
 import { DrawerNewCategory } from "@/components/categories/DrawerNewCategory";
 import React, { useEffect, useState } from 'react';
-import { useCategoryData } from "@/hooks/category/categoryHook";
-import { ICategory } from "@/interfaces/ICategory";
 
 
 export function CategoryPage() {

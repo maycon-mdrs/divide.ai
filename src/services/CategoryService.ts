@@ -17,6 +17,22 @@ export async function getAllCategories(): Promise<ICategory[] | null> {
   }
 }
 
+export async function getAllCategoriesByUser(): Promise<ICategory[] | null> {
+  try {
+    const token = getUserLocalStorage()?.token;
+    const id = getUserLocalStorage()?.id;
+    const response = await api.get<ApiResponse<ICategory[]>>(`/categories/user/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.data.success) return response.data.data;
+    return null;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
 export async function getCategoryById(id: number): Promise<ICategory | null> {
   try {
     const token = getUserLocalStorage()?.token;

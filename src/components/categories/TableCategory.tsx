@@ -18,14 +18,14 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2, FilePenLine } from 'lucide-react';
-import { useCategoryData, useCategoryDelete } from "@/hooks/category/categoryHook";
+import { useCategoryDelete, useCategoryDataByUser } from "@/hooks/category/categoryHook";
 import { ICategory } from '@/interfaces/ICategory';
 import { DrawerCategory } from "./DrawerEditCategory";
 
 
 export function TableCategory() {
-    const { data } = useCategoryData();
-    console.log(data);
+    const { data } = useCategoryDataByUser();
+
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -52,13 +52,23 @@ export function TableCategory() {
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                
+
                     {Array.isArray(data) && data.map((category: ICategory) => (
-                        
+
                         <TableRow key={category.id}>
-                            <TableCell >{category.name}</TableCell>
-                            <TableCell>{category.description}</TableCell>
-                            <TableCell>{category.expense? <p>Saída</p> :  <p>Entrada</p>}</TableCell>
+                            <TableCell>
+                                <div className="flex flex-row items-center">
+                                    <div
+                                        className="w-[3px] h-[30px] mr-2 rounded"
+                                        style={{
+                                            backgroundColor: category.color,
+                                        }}
+                                    ></div>
+                                    <span>{category.name}</span>
+                                </div>      
+                            </TableCell>
+                            <TableCell className="w-5/12">{category.description}</TableCell>
+                            <TableCell>{category.expense ? <p className="w-fit bg-rose-100 p-2 px-4 text-sm rounded text-rose-950">Saída</p> : <p className="w-fit bg-green-100 p-2 text-sm rounded text-green-950">Entrada</p>}</TableCell>
                             <TableCell>
                                 <div className="flex justify-center">
                                     <span className=" w-5 h-5 rounded-full" style={{ backgroundColor: category.color }}></span>

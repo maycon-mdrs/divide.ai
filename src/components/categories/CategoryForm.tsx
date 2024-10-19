@@ -44,7 +44,6 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
   };
 
   const handleSubmit = (values: ICategory) => {
-    console.log(toggleGroup);
     const data: ICategory = {
       name: values.name,
       description: values.description,
@@ -52,7 +51,6 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
       expense: toggleGroup === "inflow" ? false : true,
       userId: Number(auth.id!),
     };
-    console.log(data);
     onSubmit(data);
   };
 
@@ -94,7 +92,6 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
       >
         <ToggleGroup
           onValueChange={(value: string | null) => {
-            const booleanValue = value === "inflow" ? true : false;
             setToggleGroup(value);
             form.setFieldsValue({ toggleGroup: value });
           }}

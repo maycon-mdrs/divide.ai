@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
     Drawer,
@@ -22,18 +23,24 @@ export function DrawerNewCategory() {
   const handleClose = () => {
     setIsOpen(false);
 };
+const queryClient = useQueryClient();
 
-  const handleCategorySave = (values: ICategory) => {
-    setLoading(true);
-    setTimeout(() => {
-      setIsDialogOpen(true);
-      message.success("Categoria criada com sucesso!");
-      setLoading(false);
-      console.log("no envio da categoria: ", values);
-      createCategory(values);
-      setIsOpen(false);
-    }, 500);
-  };
+const handleCategorySave = (values: ICategory) => {
+  setLoading(true);
+  setTimeout(() => {
+    setIsDialogOpen(true);
+    message.success("Categoria criada com sucesso!");
+    setLoading(false);
+    console.log("no envio da categoria: ", values);
+    
+    createCategory(values, {
+      onSuccess: () => {
+      }
+    });
+    
+    setIsOpen(false);
+  }, 500);
+};
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen} onClose={handleClose}>
