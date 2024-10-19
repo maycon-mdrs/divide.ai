@@ -25,7 +25,7 @@ import { DrawerCategory } from "./DrawerEditCategory";
 
 export function TableCategory() {
     const { data } = useCategoryData();
-
+    console.log(data);
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -46,15 +46,19 @@ export function TableCategory() {
                     <TableRow>
                         <TableHead className="w-2/12">Nome</TableHead>
                         <TableHead>Descrição</TableHead>
+                        <TableHead>Entrada/Saída</TableHead>
                         <TableHead className="text-center">Cor</TableHead>
                         <TableHead className="text-center">Ações</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
+                
                     {Array.isArray(data) && data.map((category: ICategory) => (
+                        
                         <TableRow key={category.id}>
-                            <TableCell>{category.name}</TableCell>
+                            <TableCell >{category.name}</TableCell>
                             <TableCell>{category.description}</TableCell>
+                            <TableCell>{category.expense? <p>Saída</p> :  <p>Entrada</p>}</TableCell>
                             <TableCell>
                                 <div className="flex justify-center">
                                     <span className=" w-5 h-5 rounded-full" style={{ backgroundColor: category.color }}></span>

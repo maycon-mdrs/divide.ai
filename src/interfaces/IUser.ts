@@ -1,6 +1,8 @@
 export interface IUser {
     email?: string;
     token?: string;
+    id?: number;
+
 }
 
 export interface ILogin {

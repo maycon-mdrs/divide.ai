@@ -29,6 +29,7 @@ export function DrawerNewCategory() {
       setIsDialogOpen(true);
       message.success("Categoria criada com sucesso!");
       setLoading(false);
+      console.log("no envio da categoria: ", values);
       createCategory(values);
       setIsOpen(false);
     }, 500);
