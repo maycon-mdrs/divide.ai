@@ -7,6 +7,8 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import { Label } from "@/components/ui/label"
+import { Switch } from "@/components/ui/switch"
 import {
     Dialog,
     DialogContent,
@@ -25,13 +27,17 @@ import { DrawerCategory } from "./DrawerEditTransacion";
 
 export function TableTransacion() {
     const { data } = useCategoryDataByUser();
-
+    const [isPaid, setIsPaid] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const handleEdit = (category: ICategory) => {
         setSelectedCategory(category);
         setIsDrawerOpen(true);
+    };
+    const handleSwitchChange = (id: number, isPaid: boolean) => {
+        //updateCategoryPaymentStatus(id, isPaid); 
+        // add logica aqui para ajustar no front
     };
 
     const handleDrawerClose = () => {
@@ -59,16 +65,23 @@ export function TableTransacion() {
                             <TableCell className="w-5/12">
                                 <div className=" flex flex-row items-center">
                                     <span>{category.name}</span>
-                                </div>      
+                                </div>
                             </TableCell>
                             <TableCell>
-                                <p className="w-fit p-1 px-4 rounded" style={{
-                                            backgroundColor: category.color,
-                                        }}>{category.description}</p></TableCell>
+                                <p className="w-fit p-1 px-4 rounded " style={{
+                                    backgroundColor: category.color,
+                                }}>{category.description}</p></TableCell>
                             <TableCell>{category.expense ? <p className="w-fit bg-rose-100 p-2 px-4 text-sm rounded text-rose-950">Saída</p> : <p className="w-fit bg-green-100 p-2 text-sm rounded text-green-950">Entrada</p>}</TableCell>
                             <TableCell>
-                                <div className="flex justify-center">
-                                    <span className=" w-5 h-5 rounded-full" style={{ backgroundColor: category.color }}></span>
+                                <div className="flex items-center space-x-2">
+                                    <Switch
+                                        id={`payment-status-${category.id}`}
+                                        checked={category.expense ? true : false}  // Vindo do objeto category
+                                        onCheckedChange={(checked) => handleSwitchChange(category.id!, checked)}
+                                    />
+                                    <Label htmlFor={`payment-status-${category.id}`}>
+                                        {category.expense ? "Pago" : "Não pago"}
+                                    </Label>
                                 </div>
                             </TableCell>
                             <TableCell>

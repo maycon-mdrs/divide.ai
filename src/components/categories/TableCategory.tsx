@@ -59,7 +59,7 @@ export function TableCategory() {
                             <TableCell>
                                 <div className="flex flex-row items-center">
                                     <div
-                                        className="w-[3px] h-[30px] mr-2 rounded"
+                                        className="w-[3px] h-[30px] mr-2 rounded "
                                         style={{
                                             backgroundColor: category.color,
                                         }}
