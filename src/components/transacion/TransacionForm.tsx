@@ -40,6 +40,8 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: TransacionFo
   const auth = useAuth();
 
   const [money, setMoney] = useState<number>(0);
+  const [categoryId, setCategoryId] = useState<number>(0);
+
   useEffect(() => {
     if (initialData) {
       form.setFieldsValue({
@@ -72,7 +74,7 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: TransacionFo
     const data: ITransacion = {
       description: values.description,
       amount: money,
-      categoryId: values.categoryId,
+      categoryId: categoryId,
       userId: Number(auth.id!),
       paidAt: isPaid ? new Date() : null,
     };
@@ -206,7 +208,9 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: TransacionFo
          
         <Select
           onValueChange={(value: string) => {
-            form.setFieldsValue({ categoryId: value }); // Atualizar valor do formulário ao selecionar uma categoria
+              form.setFieldsValue({ categoryId: value }); 
+              const selectedCategory = data?.find(category => category.name === value);
+              setCategoryId(selectedCategory!.id!);
           }}
         >
           <SelectTrigger className="w-full">
