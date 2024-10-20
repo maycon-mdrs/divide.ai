@@ -24,37 +24,34 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
+import { ITransacion } from "@/interfaces/ITransacion";
 
-interface CategoryFormProps {
-  initialData?: ICategory | null;
-  onSubmit: (values: ICategory) => void;
+interface TransacionFormProps {
+  initialData?: ITransacion | null;
+  onSubmit: (values: ITransacion) => void;
   isLoading: boolean;
 }
 
 
-export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryFormProps) {
+export function TrasacionForm({ initialData, onSubmit, isLoading }: TransacionFormProps) {
   const [form] = Form.useForm();
-  const [selectedColor, setSelectedColor] = useState<string>(initialData?.color || '#fff');
   const [toggleGroup, setToggleGroup] = useState<string | null>(null);
-  const auth = useAuth();
   const { data } = useCategoryDataByUser();
+  const auth = useAuth();
 
   const [money, setMoney] = useState<number>(0);
   useEffect(() => {
     if (initialData) {
       form.setFieldsValue({
-        name: initialData.name,
         description: initialData.description,
-        color: initialData.color,
+        amount: money,
+        categoryId: initialData.categoryId,
+        userId: Number(auth.id!),
+        paidAt: isPaid ? new Date() : null,
       });
-      setSelectedColor(initialData.color);
     }
   }, [initialData, form]);
 
-  const handleColorChangeComplete = (color: ColorResult) => {
-    setSelectedColor(color.hex);
-    form.setFieldsValue({ color: color.hex });
-  };
 
   function onClick(adjustment: number) {
     let newMoney = parseFloat((money + adjustment).toFixed(2));
@@ -70,13 +67,14 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
     setIsPaid((prev) => !prev); // Inverte o valor ao clicar no Switch
   };
 
-  const handleSubmit = (values: ICategory) => {
-    const data: ICategory = {
-      name: values.name,
+  const handleSubmit = (values: ITransacion) => {
+    console.log()
+    const data: ITransacion = {
       description: values.description,
-      color: selectedColor,
-      expense: toggleGroup === "inflow" ? false : true,
+      amount: money,
+      categoryId: values.categoryId,
       userId: Number(auth.id!),
+      paidAt: isPaid ? new Date() : null,
     };
     onSubmit(data);
   };
@@ -102,21 +100,19 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
       onFinish={handleSubmit}
       layout="vertical"
       initialValues={{
-        name: initialData?.name || '',
-        description: initialData?.description || '',
-        color: selectedColor,
+        description: initialData?.description || ''
       }}
     >
-      <Label htmlFor="name" className="font-medium">Descrição</Label>
+      <Label htmlFor="description" className="font-medium">Descrição</Label>
       <Form.Item
-        name="name"
+        name="description"
         className="text-primary m-0 mt-1 mb-2"
         rules={[{ required: true, message: 'Por favor, insira uma descrição!' }]}
       >
-        <Input id="name" />
+        <Input id="description" />
       </Form.Item>
 
-      <Label htmlFor="description" className="font-medium">Valor</Label>
+      <Label htmlFor="money" className="font-medium">Valor</Label>
       <Form.Item
         name="value"
         className="text-primary m-0 mt-1 mb-2"
@@ -201,16 +197,16 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
       </Form.Item>
       {toggleGroup != null  && (
         <>
-      <Label htmlFor="categoria" className="font-medium">Categoria</Label>
+      <Label htmlFor="category" className="font-medium">Categoria</Label>
       <Form.Item
-        name="categoria"
+        name="categoryId"
         rules={[{ required: true, message: 'Por favor, selecione uma categoria!' }]}
         className="mt-1 mb-2"
       >
          
         <Select
           onValueChange={(value: string) => {
-            form.setFieldsValue({ categoria: value }); // Atualizar valor do formulário ao selecionar uma categoria
+            form.setFieldsValue({ categoryId: value }); // Atualizar valor do formulário ao selecionar uma categoria
           }}
         >
           <SelectTrigger className="w-full">

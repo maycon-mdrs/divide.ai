@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
     Drawer,
@@ -10,22 +9,21 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { message } from "antd";
-import { ICategory} from "@/interfaces/ICategory";
+import { ITransacion} from "@/interfaces/ITransacion";
 import { TrasacionForm } from "./TransacionForm";
-import { useCategoryMutate } from "@/hooks/category/categoryHook";
+import { useTransacionMutate } from "@/hooks/transacion/transacionHook";
 
 export function DrawerNewTransacion() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const { mutate: createCategory } = useCategoryMutate();
+  const { mutate: createTransacion } = useTransacionMutate();
    
   const handleClose = () => {
     setIsOpen(false);
 };
-const queryClient = useQueryClient();
 
-const handleCategorySave = (values: ICategory) => {
+const handleTransacionSave = (values: ITransacion) => {
   setLoading(true);
   setTimeout(() => {
     setIsDialogOpen(true);
@@ -33,7 +31,7 @@ const handleCategorySave = (values: ICategory) => {
     setLoading(false);
     console.log("no envio da transação: ", values);
     
-    createCategory(values, {
+    createTransacion(values, {
       onSuccess: () => {
       }
     });
@@ -52,7 +50,7 @@ const handleCategorySave = (values: ICategory) => {
           <DrawerHeader>
             <DrawerTitle>Criar nova transação</DrawerTitle>
             <DrawerDescription>Preencha os detalhes para criar uma nova transação.</DrawerDescription>
-            <TrasacionForm onSubmit={handleCategorySave} isLoading={isLoading} />
+            <TrasacionForm onSubmit={handleTransacionSave} isLoading={isLoading} />
           </DrawerHeader>
         </div>
       </DrawerContent>
