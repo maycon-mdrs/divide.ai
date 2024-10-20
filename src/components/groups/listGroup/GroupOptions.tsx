@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Edit, Info, Trash } from "lucide-react";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useMediaQuery } from 'react-responsive';
 import { 
     DropdownMenu,  
@@ -8,7 +8,6 @@ import {
     DropdownMenuContent, 
     DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { EllipsisVertical } from "lucide-react";  
-import { IGroupCard } from "@/interfaces/IGroup";
 import { DialogCode } from "../DialogCode";
 import { DrawerEditGroup } from "../saveGroup/DrawerEditGroup";
 import {
@@ -16,18 +15,37 @@ import {
   DrawerContent,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { DialogTitle } from "@/components/ui/dialog";
+import { IGroup } from "@/interfaces/IGroup";
+import { getUserLocalStorage } from "@/context/AuthProvider/util";
+import { useGroupDelete, useGroupLeave } from "@/hooks/group/groupHook";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { message } from "antd";
 
 interface GroupOptionsProps {
-    group: IGroupCard;
+    group: IGroup;
 }
 
 export function GroupOptions({ group }: GroupOptionsProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); 
+  const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false); 
+
+  const userId = Number(getUserLocalStorage()?.id);
+  const { mutate: deleteGroup, isSuccess: isDeleteSuccess } = useGroupDelete();
+  const { mutate: leaveGroup, isSuccess: isLeaveSuccess } = useGroupLeave(group.id!, userId);
 
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
+
+  const isCreator = Number(group.createdBy.id) === userId;
 
   const handleEditGroup = () => {
     setIsEditDrawerOpen(true);
@@ -39,6 +57,22 @@ export function GroupOptions({ group }: GroupOptionsProps) {
 
   const handleDrawerClose = () => {
     setIsDrawerOpen(false);
+  };
+
+  const handleDelete = () => {
+    deleteGroup(group.id!); 
+    if (isDeleteSuccess) {
+      message.success('Grupo removido com sucesso!');
+      setIsDeleteDialogOpen(false);
+    }
+  };
+
+  const handleLeave = () => {
+    leaveGroup(); 
+    if (isLeaveSuccess) {
+      message.success('Você saiu do grupo com sucesso!');
+      setIsLeaveDialogOpen(false);
+    }
   };
 
   return (
@@ -53,11 +87,15 @@ export function GroupOptions({ group }: GroupOptionsProps) {
           <DropdownMenuContent className="w-40">
             <DropdownMenuItem onClick={handleEditGroup}>Editar</DropdownMenuItem>
             <DropdownMenuItem onClick={handleGetCode}>Obter código</DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => console.log(`Excluir Grupo ${group.id}`)}
-            >
-              Remover
-            </DropdownMenuItem>
+            {isCreator ? (
+              <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
+                Remover
+              </DropdownMenuItem> 
+            ) : (
+              <DropdownMenuItem onClick={() => setIsLeaveDialogOpen(true)}>
+                Sair
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (
@@ -90,14 +128,25 @@ export function GroupOptions({ group }: GroupOptionsProps) {
                 <Info className="w-4 h-4" />
                 <span>Obter código</span>
               </Button>
-              <Button
-                variant="destructive"
-                onClick={() => console.log(`Excluir Grupo ${group.id}`)}
-                className="flex items-center space-x-2"
-              >
-                <Trash className="w-4 h-4" />
-                <span>Remover</span>
-              </Button>
+              {isCreator ? (
+                <Button
+                  variant="destructive"
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                  className="flex items-center space-x-2"
+                >
+                  <Trash className="w-4 h-4" />
+                  <span>Remover</span>
+                </Button>
+              ) : (
+                <Button
+                  variant="destructive"
+                  onClick={() => setIsLeaveDialogOpen(true)}
+                  className="flex items-center space-x-2"
+                >
+                  <Trash className="w-4 h-4" />
+                  <span>Sair</span>
+                </Button>
+              )}
             </div>
           </DrawerContent>
         </Drawer>
@@ -107,15 +156,55 @@ export function GroupOptions({ group }: GroupOptionsProps) {
         <DialogCode
           isOpen={isDialogOpen}
           onClose={() => setIsDialogOpen(false)}
-          groupCode={group.groupCode}
+          groupCode={group.code}
         />
       )}
 
       <DrawerEditGroup
         isOpen={isEditDrawerOpen}
         onClose={() => setIsEditDrawerOpen(false)}
-        groupId={group.id}
+        initialGroup={group}
       />
+
+      {/* Modal de deletar grupo */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Você tem certeza de que deseja deletar o grupo?</DialogTitle>
+            <DialogDescription>
+              Esta ação não pode ser desfeita.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setIsDeleteDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Deletar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de sair do grupo */}
+      <Dialog open={isLeaveDialogOpen} onOpenChange={setIsLeaveDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Você tem certeza de que deseja sair do grupo?</DialogTitle>
+            <DialogDescription>
+              Você não poderá mais acessar este grupo após sair.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setIsLeaveDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button variant="destructive" onClick={handleLeave}>
+              Sair
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

@@ -1,10 +1,10 @@
 import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "../../ui/card";
 import { GroupAvatars } from "./GroupAvatars";
 import { GroupOptions } from "./GroupOptions";
-import { IGroupCard } from "@/interfaces/IGroup";
+import { IGroup } from "@/interfaces/IGroup";
 
 interface GroupCardProps {
-  group: IGroupCard;
+  group: IGroup;
 }
 
 export function GroupCard({ group }: GroupCardProps) {
@@ -21,7 +21,7 @@ export function GroupCard({ group }: GroupCardProps) {
             </span>
           </CardTitle>
           <CardDescription className="text-sm text-gray-600">
-            Criado por: {group.creator.firstName} {group.creator.lastName}
+            Criado por: {group.createdBy.firstName} {group.createdBy.lastName}
           </CardDescription>
           <CardDescription className="text-sm text-gray-600">
             {group.description}
@@ -31,7 +31,7 @@ export function GroupCard({ group }: GroupCardProps) {
       </CardHeader>
 
       <CardFooter>
-        <GroupAvatars users={group.users} />
+        <GroupAvatars users={group.members} />
       </CardFooter>
     </Card>
   );

@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback } from "../../ui/avatar";
-import { IUserCard } from "@/interfaces/IUser";
+import { IUserResponse } from "@/interfaces/IUser";
 
 interface GroupAvatarsProps {
-    users: IUserCard[];
+    users: IUserResponse[];
     limit?: number;
 };
 

@@ -1,19 +1,22 @@
-import { GroupStatus } from "@/types/Group";
-import { IUserCard } from "./IUser";
+import { IUserResponse } from "./IUser";
 
-export interface IGroupCard {
+export interface IGroup {
     id: number;
     name: string;
     description: string;
-    creator: IUserCard;
-    status: GroupStatus;
-    users: IUserCard[];
-    groupCode: string;
+    createdBy: IUserResponse;
+    members: IUserResponse[];
+    code: string;
 }
 
 export interface IGroupForm {
-    id: number;
+    id?: number;
     name: string;
     description: string;
-    code?: number;
+    createdBy?: number;
+}
+
+export interface IJoinGroup {
+    code: string;
+    userId: number;
 }
