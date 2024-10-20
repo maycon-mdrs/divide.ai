@@ -179,6 +179,7 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
       >
         <ToggleGroup
           onValueChange={(value: string | null) => {
+
             setToggleGroup(value);
             form.setFieldsValue({ toggleGroup: value });
           }}
@@ -198,6 +199,7 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
           </ToggleGroupItem>
         </ToggleGroup>
       </Form.Item>
+
       <Label htmlFor="categoria" className="font-medium">Categoria</Label>
       <Form.Item
         name="categoria"
@@ -214,7 +216,7 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
               {data?.map((category: ICategory) => (
                 <SelectItem key={category.id} value={category.name}>
                   <div className="flex justify-center">
-                    <span className=" w-5 h-5 rounded-full mr-2" style={{ backgroundColor: category.color }}></span>
+                    <span className="w-5 h-5 rounded-full mr-2" style={{ backgroundColor: category.color }}></span>
                     <p>{category.name}</p>
                   </div>
                 </SelectItem>
@@ -223,17 +225,21 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
           </SelectContent>
         </Select>
       </Form.Item>
-      <Label htmlFor="isPage" className="font-medium">Essa transação foi paga?</Label>
-      <Form.Item
-        name="isPage"
-        rules={[{ required: true, message: 'Por favor, selecione se foi pago!' }]}
-        className="mt-1 mb-2"
-      >
-        <div className="flex items-center space-x-2">
-          <Switch id="airplane-mode bg-[#29756f]" checked={isPaid} onCheckedChange={handleSwitchChange} />
-          <Label htmlFor="airplane-mode">{isPaid ? "Sim, foi paga." : "Não, foi pago."}</Label>
-        </div>
-      </Form.Item>
+      {toggleGroup === "outflow" && (
+        <>
+          <Label htmlFor="isPaid" className="font-medium">Essa transação foi paga?</Label>
+          <Form.Item
+            name="isPaid"
+            rules={[{ required: true, message: 'Por favor, selecione se foi pago!' }]}
+            className="mt-1 mb-2"
+          >
+            <div className="flex items-center space-x-2">
+              <Switch id="airplane-mode bg-[#29756f]" checked={isPaid} onCheckedChange={handleSwitchChange} />
+              <Label htmlFor="airplane-mode">{isPaid ? "Sim, foi paga." : "Não foi pago."}</Label>
+            </div>
+          </Form.Item>
+        </>
+      )}
       <Button type="submit" className="w-full mt-4 bg-[#29756F] hover:bg-[#29756F] text-white" disabled={isLoading}>
         {isLoading ? <LoadingOutlined spin /> : 'Salvar'}
       </Button>
