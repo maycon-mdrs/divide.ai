@@ -85,7 +85,9 @@ export function GroupOptions({ group }: GroupOptionsProps) {
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40">
-            <DropdownMenuItem onClick={handleEditGroup}>Editar</DropdownMenuItem>
+            {isCreator && (
+              <DropdownMenuItem onClick={handleEditGroup}>Editar</DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={handleGetCode}>Obter código</DropdownMenuItem>
             {isCreator ? (
               <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
@@ -112,14 +114,16 @@ export function GroupOptions({ group }: GroupOptionsProps) {
           <DrawerContent className="flex justify-center items-center">
             <DialogTitle className="sr-only">Opções do Grupo</DialogTitle>
             <div className="flex flex-col space-y-4 p-4 w-1/2 max-w-md mx-auto">
-              <Button
-                variant="outline"
-                onClick={handleEditGroup}
-                className="flex items-center space-x-2"
-              >
-                <Edit className="w-4 h-4" />
-                <span>Editar</span>
-              </Button>
+              {isCreator && (
+                <Button
+                  variant="outline"
+                  onClick={handleEditGroup}
+                  className="flex items-center space-x-2"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span>Editar</span>
+                </Button>
+              )}
               <Button
                 variant="secondary"
                 onClick={handleGetCode}
