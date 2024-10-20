@@ -206,35 +206,37 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
         rules={[{ required: true, message: 'Por favor, selecione uma categoria!' }]}
         className="mt-1 mb-2"
       >
-        <Select>
-    <SelectTrigger className="w-full">
-      <SelectValue placeholder="Selecione uma categoria" />
-    </SelectTrigger>
-    <SelectContent>
-      <SelectGroup>
-        <SelectLabel>Categorias</SelectLabel>
-        {data
-          ?.filter((category: ICategory) => {
-            console.log("valor",category.expense);
-            // Filtrar com base no valor selecionado no toggleGroup
-            if (toggleGroup === "inflow") {
-              return category.expense === false; // Mostrar categorias de entrada
-            } else if (toggleGroup === "outflow") {
-              return category.expense === true; // Mostrar categorias de saída
-            }
-            return false; // Se nenhum tipo for selecionado, não mostrar nada
-          })
-          .map((category: ICategory) => (
-            <SelectItem key={category.id} value={category.name}>
-              <div className="flex justify-center">
-                <span className="w-5 h-5 rounded-full mr-2" style={{ backgroundColor: category.color }}></span>
-                <p>{category.name}</p>
-              </div>
-            </SelectItem>
-          ))}
-      </SelectGroup>
-    </SelectContent>
-  </Select>
+        <Select
+          onValueChange={(value: string) => {
+            form.setFieldsValue({ categoria: value }); // Atualizar valor do formulário ao selecionar uma categoria
+          }}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Selecione uma categoria" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Categorias</SelectLabel>
+              {data
+                ?.filter((category: ICategory) => {
+                  if (toggleGroup === "inflow") {
+                    return category.expense === false;
+                  } else if (toggleGroup === "outflow") {
+                    return category.expense === true;
+                  }
+                  return false;
+                })
+                .map((category: ICategory) => (
+                  <SelectItem key={category.id} value={category.name}>
+                    <div className="flex justify-center">
+                      <span className="w-5 h-5 rounded-full mr-2" style={{ backgroundColor: category.color }}></span>
+                      <p>{category.name}</p>
+                    </div>
+                  </SelectItem>
+                ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </Form.Item>
       {toggleGroup === "outflow" && (
         <>
