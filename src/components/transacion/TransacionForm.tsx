@@ -199,13 +199,15 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
           </ToggleGroupItem>
         </ToggleGroup>
       </Form.Item>
-
+      {toggleGroup != null  && (
+        <>
       <Label htmlFor="categoria" className="font-medium">Categoria</Label>
       <Form.Item
         name="categoria"
         rules={[{ required: true, message: 'Por favor, selecione uma categoria!' }]}
         className="mt-1 mb-2"
       >
+         
         <Select
           onValueChange={(value: string) => {
             form.setFieldsValue({ categoria: value }); // Atualizar valor do formulário ao selecionar uma categoria
@@ -237,7 +239,10 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: CategoryForm
             </SelectGroup>
           </SelectContent>
         </Select>
+        
       </Form.Item>
+      </>
+      )}
       {toggleGroup === "outflow" && (
         <>
           <Label htmlFor="isPaid" className="font-medium">Essa transação foi paga?</Label>
