@@ -53,7 +53,7 @@ export function TableTransacion() {
                         <TableHead className="w-2/12">Descrição</TableHead>
                         <TableHead>Categoria</TableHead>
                         <TableHead>Valor</TableHead>
-                        <TableHead className="text-center">Pago/Não Pago</TableHead>
+                        <TableHead>Pago/Não Pago</TableHead>
                         <TableHead className="text-center">Ações</TableHead>
                     </TableRow>
                 </TableHeader>
@@ -63,7 +63,7 @@ export function TableTransacion() {
 
                         <TableRow key={category.id}>
                             <TableCell className="w-5/12">
-                                <div className=" flex flex-row items-center">
+                                <div className="flex flex-row items-center">
                                     <span>{category.name}</span>
                                 </div>
                             </TableCell>
