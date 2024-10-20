@@ -4,6 +4,7 @@ import { LoginPage } from "@/pages/login/LoginPage";
 import MainLayout from "@/pages/layouts/MainLayout";
 import { RegisterPage } from "@/pages/login/RegisterPage";
 import { CategoryPage } from "@/pages/category/CategoryPage";
+import { TransacionPage } from "@/pages/transacion/TransacionPage";
 import { PrivateRoutes } from "./pages/PrivateRoutes";
 import { Groups } from "./pages/groups/Groups";
 import { useEffect } from "react";
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
       {
         path: "/categorias",
         element: <Element children={<CategoryPage />} />
+      },
+      {
+        path: "/transacoes",
+        element: <Element children={<TransacionPage />} />
       }
     ],
   },

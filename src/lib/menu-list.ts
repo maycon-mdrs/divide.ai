@@ -54,7 +54,7 @@ export function getMenuList(pathname: string): Group[] {
           submenus: []
         },
         {
-          href: "/transasoes",
+          href: "/transacoes",
           label: "Transações",
           active: pathname.includes("/transasoes"),
           icon: ArrowRightLeft,
