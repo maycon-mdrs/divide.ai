@@ -8,26 +8,36 @@ interface GroupCardProps {
 }
 
 export function GroupCard({ group }: GroupCardProps) {
+  const handleClick = (event: React.MouseEvent) => {
+    event.stopPropagation(); // Evita propagação do clique para o card
+  };
+
   return (
-    <Card className="w-full flex flex-col">
+    <Card
+      className="w-full flex flex-col bg-[hsl(var(--card))] 
+                text-[hsl(var(--card-foreground))] hover:bg-gray-50 
+                hover:text-[hsl(var(--muted-foreground))] transition-colors"
+    >
       <CardHeader className="flex flex-row justify-between items-start">
         <div className="flex flex-col">
           <CardTitle>
-            <span
-              className="inline-block bg-[#E9F3F2] text-[#438883] 
-                        px-3 py-1 rounded-full text-lg font-medium mb-4"
-            >
-              {group.name}
-            </span>
-          </CardTitle>
-          <CardDescription className="text-sm text-gray-600">
+              <span
+                className="inline-block bg-[#E9F3F2] text-[#438883] 
+                          px-3 py-1 rounded-full text-lg font-medium mb-4"
+              >
+                {group.name}
+              </span>
+            </CardTitle>
+          <CardDescription className="text-sm text-[hsl(var(--muted-foreground))]">
             Criado por: {group.createdBy.firstName} {group.createdBy.lastName}
           </CardDescription>
-          <CardDescription className="text-sm text-gray-600">
+          <CardDescription className="text-sm text-[hsl(var(--muted-foreground))]">
             {group.description}
           </CardDescription>
         </div>
-        <GroupOptions group={group} />
+        <div onClick={handleClick}>
+          <GroupOptions group={group} />
+        </div>
       </CardHeader>
 
       <CardFooter>
@@ -36,4 +46,5 @@ export function GroupCard({ group }: GroupCardProps) {
     </Card>
   );
 }
+
 

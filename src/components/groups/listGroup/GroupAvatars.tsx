@@ -6,7 +6,7 @@ interface GroupAvatarsProps {
     limit?: number;
 };
 
-const generateColor = (id: number) => {
+export const generateColor = (id: number) => {
     const colors = [
         "bg-red-500 text-white",
         "bg-blue-500 text-white",

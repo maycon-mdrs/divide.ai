@@ -2,7 +2,6 @@ import { api } from '@/services/api';
 import { getUserLocalStorage } from '@/context/AuthProvider/util';
 import { IGroup, IGroupForm, IJoinGroup } from '@/interfaces/IGroup';
 import { ErrorResponse, ApiResponse } from '@/interfaces/IResponse';
-import axios from 'axios';
 
 export async function getAllGroupsByUser(): Promise<IGroup[] | null> {
     try {
@@ -127,6 +126,26 @@ export async function leaveGroup(groupId: number, userId: number): Promise<void 
           throw new Error('Erro desconhecido ao entrar no grupo'); 
         }
     }
+}
+
+export async function deleteMember(groupId: number, userId: number): Promise<void | null> {
+  try {
+    const token = getUserLocalStorage()?.token;
+    const response = await api.delete<ApiResponse<null>>(`/groups/${groupId}/user/${userId}/delete`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.data.success) return response.data.data;
+    return null;
+  } catch (error: any) {
+      const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
+
+      if (errorResponse && errorResponse.error?.message) {
+        throw new Error(errorResponse.error?.message); 
+      } else {
+        throw new Error('Erro desconhecido ao entrar no grupo'); 
+      }
+  }
 }
   
   

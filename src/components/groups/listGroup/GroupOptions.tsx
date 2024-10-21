@@ -40,11 +40,10 @@ export function GroupOptions({ group }: GroupOptionsProps) {
   const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false); 
 
   const userId = Number(getUserLocalStorage()?.id);
-  const { mutate: deleteGroup, isSuccess: isDeleteSuccess } = useGroupDelete();
-  const { mutate: leaveGroup, isSuccess: isLeaveSuccess } = useGroupLeave(group.id!, userId);
+  const { mutate: deleteGroup } = useGroupDelete();
+  const { mutate: leaveGroup } = useGroupLeave(group.id!, userId);
 
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
-
   const isCreator = Number(group.createdBy.id) === userId;
 
   const handleEditGroup = () => {
@@ -55,26 +54,30 @@ export function GroupOptions({ group }: GroupOptionsProps) {
     setIsDialogOpen(true);
   };
 
-  const handleDrawerClose = () => {
-    setIsDrawerOpen(false);
-  };
-
   const handleDelete = () => {
-    deleteGroup(group.id!); 
-    if (isDeleteSuccess) {
-      message.success('Grupo removido com sucesso!');
-      setIsDeleteDialogOpen(false);
-    }
+    deleteGroup(group.id!, {
+      onSuccess: () => {
+        message.success('Grupo removido com sucesso!');
+        setIsDeleteDialogOpen(false);
+      },
+      onError: () => {
+        message.error('Erro ao remover o grupo.');
+      },
+    });
   };
 
   const handleLeave = () => {
-    leaveGroup(); 
-    if (isLeaveSuccess) {
-      message.success('Você saiu do grupo com sucesso!');
-      setIsLeaveDialogOpen(false);
-    }
+    leaveGroup(undefined, {
+      onSuccess: () => {
+        message.success('Você saiu do grupo com sucesso!');
+        setIsLeaveDialogOpen(false);
+      },
+      onError: () => {
+        message.error('Erro ao sair do grupo.');
+      },
+    });
   };
-
+  
   return (
     <>
       {isDesktop ? (
@@ -104,7 +107,6 @@ export function GroupOptions({ group }: GroupOptionsProps) {
         <Drawer
           open={isDrawerOpen}
           onOpenChange={setIsDrawerOpen}
-          onClose={handleDrawerClose}
         >
           <DrawerTrigger asChild>
             <div className="cursor-pointer p-2 rounded-full hover:bg-gray-100 transition-colors">

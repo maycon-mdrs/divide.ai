@@ -8,6 +8,7 @@ import { PrivateRoutes } from "./pages/PrivateRoutes";
 import { Groups } from "./pages/groups/Groups";
 import { useEffect } from "react";
 import { initializeAxios } from "./services/api";
+import { GroupDetails } from "./pages/groups/GroupDetails";
 
 function Element({ children }: { children: JSX.Element }) {  
   const navigate = useNavigate();
@@ -34,16 +35,20 @@ export const router = createBrowserRouter([
       },
       {
         path: "/dashboard",
-        element: <Element children={<HomePage />} />
+        element: <Element children={<HomePage />} />,
       },
       {
         path: "/grupos",
-        element: <Element children={<Groups />} />
+        element: <Element children={<Groups />} />,
+      },
+      {
+        path: "/grupos/:id",
+        element: <Element children={<GroupDetails />} />, 
       },
       {
         path: "/categorias",
-        element: <Element children={<CategoryPage />} />
-      }
+        element: <Element children={<CategoryPage />} />,
+      },
     ],
   },
   {

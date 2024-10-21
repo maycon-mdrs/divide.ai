@@ -1,4 +1,4 @@
-import { createGroup, deleteGroup, getAllGroupsByUser, getGroupById, joinGroup, leaveGroup, updateGroup } from "@/services/GroupService";
+import { createGroup, deleteGroup, deleteMember, getAllGroupsByUser, getGroupById, joinGroup, leaveGroup, updateGroup } from "@/services/GroupService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useGroupDataByUser() {
@@ -25,7 +25,7 @@ export function useGroupMutate() {
 export function useGroupDataById(id: number) {
     const query = useQuery({
         queryFn: () => getGroupById(id),
-        queryKey: ["categories-data-by-id"],
+        queryKey: ["groups-data-by-id"],
     });
 
     return query;
@@ -78,5 +78,18 @@ export function useGroupLeave(groupId: number, userId: number) {
     });
   
     return mutate;
-  }
+}
   
+
+export function useGroupDeleteMember(groupId: number, userId: number) {
+    const queryClient = useQueryClient();
+    
+    const mutate = useMutation({
+      mutationFn: () => deleteMember(groupId, userId), 
+      onSuccess: () => {  
+        queryClient.invalidateQueries({ queryKey: ['groups-data-by-id'] });
+      }
+    });
+  
+    return mutate;
+}
