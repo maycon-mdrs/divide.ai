@@ -20,19 +20,23 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2, FilePenLine } from 'lucide-react';
-import { useCategoryDelete, useCategoryDataByUser } from "@/hooks/category/categoryHook";
+import { useTransacionDelete, useTransacionDataByUser } from "@/hooks/transacion/transacionHook";
+import { useCategoryDataByUser } from "@/hooks/category/categoryHook";
 import { ICategory } from '@/interfaces/ICategory';
 import { DrawerCategory } from "./DrawerEditTransacion";
+import { ITransacion, ITransacionResponse } from "@/interfaces/ITransacion";
 
 
 export function TableTransacion() {
-    const { data } = useCategoryDataByUser();
+    const { data } = useTransacionDataByUser();
+
+    console.log("data vem assim", data);
     const [isPaid, setIsPaid] = useState(false);
-    const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
+    const [selectedTransacion, setSelectedTransacion] = useState<ITransacionResponse | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const handleEdit = (category: ICategory) => {
-        setSelectedCategory(category);
+    const handleEdit = (transacion: ITransacionResponse) => {
+        setSelectedTransacion(transacion);
         setIsDrawerOpen(true);
     };
     const handleSwitchChange = (id: number, isPaid: boolean) => {
@@ -42,7 +46,7 @@ export function TableTransacion() {
 
     const handleDrawerClose = () => {
         setIsDrawerOpen(false);
-        setSelectedCategory(null);
+        setSelectedTransacion(null);
     };
 
     return (
@@ -52,44 +56,40 @@ export function TableTransacion() {
                     <TableRow>
                         <TableHead className="w-2/12">Descrição</TableHead>
                         <TableHead>Categoria</TableHead>
-                        <TableHead>Valor</TableHead>
-                        <TableHead>Pago/Não Pago</TableHead>
+                        <TableHead>Valor (R$)</TableHead>
+                        <TableHead>Classificação</TableHead>
                         <TableHead className="text-center">Ações</TableHead>
                     </TableRow>
                 </TableHeader>
                 <TableBody>
 
-                    {Array.isArray(data) && data.map((category: ICategory) => (
-
-                        <TableRow key={category.id}>
+                    {Array.isArray(data) && data.map((transaction: ITransacionResponse) => (
+                        <TableRow key={transaction.id}>
                             <TableCell className="w-5/12">
                                 <div className="flex flex-row items-center">
-                                    <span>{category.name}</span>
+                                    <span>{transaction.description}</span>
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <p className="w-fit p-1 px-4 rounded " style={{
-                                    backgroundColor: category.color,
-                                }}>{category.description}</p></TableCell>
-                            <TableCell>{category.expense ? <p className="w-fit bg-rose-100 p-2 px-4 text-sm rounded text-rose-950">Saída</p> : <p className="w-fit bg-green-100 p-2 text-sm rounded text-green-950">Entrada</p>}</TableCell>
+                                <p className="w-fit p-1 px-4 rounded-xl" style={{ backgroundColor: transaction.category.color }}>{transaction.category.name}</p></TableCell>
                             <TableCell>
-                                <div className="flex items-center space-x-2">
-                                    <Switch
-                                        id={`payment-status-${category.id}`}
-                                        checked={category.expense ? true : false}  // Vindo do objeto category
-                                        onCheckedChange={(checked) => handleSwitchChange(category.id!, checked)}
-                                    />
-                                    <Label htmlFor={`payment-status-${category.id}`}>
-                                        {category.expense ? "Pago" : "Não pago"}
-                                    </Label>
-                                </div>
-                            </TableCell>
+                                <p> {new Intl.NumberFormat('pt-BR', {
+                                    minimumFractionDigits: 2,
+                                    maximumFractionDigits: 2,
+                                }).format(Math.abs(transaction.amount))}</p></TableCell>
+                            <TableCell>{transaction.paidAt == null && transaction.amount > 0
+                                ? <p className="w-fit bg-green-100 p-2 text-sm rounded text-green-950">Ganho</p>
+                                : transaction.paidAt !== null && transaction.amount < 0
+                                    ? <p className="w-fit bg-green-100 p-2 text-sm rounded text-green-950">Gasto</p>
+                                    : <p className="w-fit bg-red-100 p-2 text-sm rounded text-red-950">Dívida</p>
+                            }</TableCell>
+
                             <TableCell>
                                 <div className="flex justify-center">
-                                    <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(category)}>
+                                    <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(transaction)}>
                                         <FilePenLine className="w-5 h-5" />
                                     </Button>
-                                    <ButtonDelete category={category} />
+                                    <ButtonDelete transacion={transaction} />
                                 </div>
                             </TableCell>
                         </TableRow>
@@ -98,9 +98,9 @@ export function TableTransacion() {
             </Table>
 
             {/* Drawer para edição */}
-            {selectedCategory && (
+            {selectedTransacion && (
                 <DrawerCategory
-                    initialCategory={selectedCategory}
+                    initialCategory={selectedTransacion}
                     isOpen={isDrawerOpen}
                     onClose={handleDrawerClose}
                 />
@@ -109,16 +109,16 @@ export function TableTransacion() {
     );
 }
 
-function ButtonDelete({ category }: { category: ICategory }) {
+function ButtonDelete({ transacion }: { transacion: ITransacionResponse }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { mutate, isSuccess } = useCategoryDelete();
+    const { mutate, isSuccess } = useTransacionDelete();
 
     const handleClose = () => {
         setIsModalOpen(false);
     };
 
     const handleDelete = () => {
-        mutate(category.id!);
+        mutate(transacion.id!);
         if (isSuccess) {
             handleClose();
         }
@@ -135,7 +135,7 @@ function ButtonDelete({ category }: { category: ICategory }) {
                 <DialogHeader>
                     <DialogTitle>Você tem certeza dessa ação?</DialogTitle>
                     <DialogDescription>
-                        Esta ação não pode ser desfeita. Isso excluirá permanentemente sua categoria e suas dívidas/entradas associadas a esta categoria.
+                        Esta ação não pode ser desfeita. Isso excluirá permanentemente sua transação.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>

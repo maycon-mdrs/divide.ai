@@ -1,5 +1,5 @@
 import { api } from '@/services/api';
-import { ITransacion } from '@/interfaces/ITransacion';
+import { ITransacion, ITransacionResponse } from '@/interfaces/ITransacion';
 import { ApiResponse } from '@/interfaces/ApiResponse';
 import { getUserLocalStorage } from '@/context/AuthProvider/util';
 
@@ -18,11 +18,11 @@ export async function getAllTransacions(): Promise<ITransacion[] | null> {
   }
 }
 
-export async function getAllTransacionsByUser(): Promise<ITransacion[] | null> {
+export async function getAllTransacionsByUser(): Promise<ITransacionResponse[] | null> {
   try {
     const token = getUserLocalStorage()?.token;
     const id = getUserLocalStorage()?.id;
-    const response = await api.get<ApiResponse<ITransacion[]>>(`/categories/user/${id}`, {
+    const response = await api.get<ApiResponse<ITransacionResponse[]>>(`/user-transactions/transactions/${id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -37,7 +37,7 @@ export async function getAllTransacionsByUser(): Promise<ITransacion[] | null> {
 export async function getTransacionById(id: number): Promise<ITransacion | null> {
   try {
     const token = getUserLocalStorage()?.token;
-    const response = await api.get<ApiResponse<ITransacion>>(`/categories/${id}`, {
+    const response = await api.get<ApiResponse<ITransacion>>(`/user-transactions/transactions/${id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 

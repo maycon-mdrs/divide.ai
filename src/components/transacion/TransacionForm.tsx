@@ -41,6 +41,7 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: TransacionFo
 
   const [money, setMoney] = useState<number>(0);
   const [categoryId, setCategoryId] = useState<number>(0);
+  const [isPaid, setIsPaid] = useState(false);
 
   useEffect(() => {
     if (initialData) {
@@ -63,11 +64,13 @@ export function TrasacionForm({ initialData, onSubmit, isLoading }: TransacionFo
     form.setFieldsValue({ money: newMoney });
     setMoney(newMoney);
   }
-  const [isPaid, setIsPaid] = useState(false);
+  
 
   const handleSwitchChange = () => {
-    setIsPaid((prev) => !prev); // Inverte o valor ao clicar no Switch
+    setIsPaid((prev) => !prev); 
   };
+
+  
 
   const handleSubmit = (values: ITransacion) => {
     console.log()
