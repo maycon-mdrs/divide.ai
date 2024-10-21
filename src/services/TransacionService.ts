@@ -6,7 +6,7 @@ import { getUserLocalStorage } from '@/context/AuthProvider/util';
 export async function getAllTransacions(): Promise<ITransacion[] | null> {
   try {
     const token = getUserLocalStorage()?.token;
-    const response = await api.get<ApiResponse<ITransacion[]>>('/categories', {
+    const response = await api.get<ApiResponse<ITransacion[]>>('/user-transactions', {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
@@ -68,7 +68,7 @@ export async function createTransacion(transacion: ITransacion): Promise<ITransa
 export async function updateTransacion(transacion: ITransacion): Promise<ITransacion | null> {
   try {
     const token = getUserLocalStorage()?.token;
-    const response = await api.put<ApiResponse<ITransacion>>(`/transacion/${transacion.id}`, transacion, {
+    const response = await api.put<ApiResponse<ITransacion>>(`//user-transactions/${transacion.id}`, transacion, {
       headers: { 'Authorization': `Bearer ${token}`, }
     });
 
@@ -83,7 +83,7 @@ export async function updateTransacion(transacion: ITransacion): Promise<ITransa
 export async function deleteTransacion(id: number): Promise<void | null> {
   try {
     const token = getUserLocalStorage()?.token;
-    const response = await api.delete<ApiResponse<null>>(`/categories/${id}`, {
+    const response = await api.delete<ApiResponse<null>>(`/user-transactions/${id}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     });
 
