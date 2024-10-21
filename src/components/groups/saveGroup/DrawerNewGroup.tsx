@@ -35,9 +35,9 @@ export function DrawerNewGroup() {
           setIsOpen(false);
         }
       },
-      onError: () => {
-        message.error("Erro ao criar o grupo. Tente novamente.");
-      },
+      onError: (error: any) => {
+        message.error(error.message);
+      }
     });
   };
 

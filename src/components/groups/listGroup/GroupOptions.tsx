@@ -60,9 +60,9 @@ export function GroupOptions({ group }: GroupOptionsProps) {
         message.success('Grupo removido com sucesso!');
         setIsDeleteDialogOpen(false);
       },
-      onError: () => {
-        message.error('Erro ao remover o grupo.');
-      },
+      onError: (error: any) => {
+        message.error(error.message);
+      }
     });
   };
 
@@ -72,9 +72,9 @@ export function GroupOptions({ group }: GroupOptionsProps) {
         message.success('Você saiu do grupo com sucesso!');
         setIsLeaveDialogOpen(false);
       },
-      onError: () => {
-        message.error('Erro ao sair do grupo.');
-      },
+      onError: (error: any) => {
+        message.error(error.message);
+      }
     });
   };
   

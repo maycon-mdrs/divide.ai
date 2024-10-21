@@ -13,9 +13,14 @@ export async function getAllGroupsByUser(): Promise<IGroup[] | null> {
   
       if (response.data.success) return response.data.data;
       return null;
-    } catch (error) {
-      console.error(error);
-      throw error;
+    } catch (error: any) {
+      const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
+
+        if (errorResponse && errorResponse.error?.message) {
+          throw new Error(errorResponse.error?.message); 
+        } else {
+          throw new Error('Erro desconhecido ao entrar no grupo'); 
+        }
     }
 }
   
@@ -28,9 +33,14 @@ export async function getGroupById(id: number): Promise<IGroup | null> {
 
         if (response.data.success) return response.data.data;
         return null;
-    } catch (error) {
-        console.error(error);
-        throw error;
+    } catch (error: any) {
+      const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
+
+      if (errorResponse && errorResponse.error?.message) {
+        throw new Error(errorResponse.error?.message); 
+      } else {
+        throw new Error('Erro desconhecido ao buscar o grupo'); 
+      }
     }
 }
 
@@ -44,9 +54,14 @@ export async function createGroup(group: IGroupForm): Promise<IGroup | null> {
 
         if (response.data.success) return response.data.data;
         return null;
-    } catch (error) {
-        console.error(error);
-        throw error;
+    } catch (error: any) {
+      const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
+
+      if (errorResponse && errorResponse.error?.message) {
+        throw new Error(errorResponse.error?.message); 
+      } else {
+        throw new Error('Erro desconhecido ao criar grupo'); 
+      }
     }
 }
 
@@ -59,9 +74,14 @@ export async function updateGroup(group: IGroupForm): Promise<IGroup | null> {
 
         if (response.data.success) return response.data.data;
         return null;
-    } catch (error) {
-        console.error(error);
-        throw error;
+    } catch (error: any) {
+      const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
+
+      if (errorResponse && errorResponse.error?.message) {
+        throw new Error(errorResponse.error?.message); 
+      } else {
+        throw new Error('Erro desconhecido ao atualizar no grupo'); 
+      }
     }
 }
 
@@ -81,9 +101,9 @@ export async function joinGroup(joinGroup: IJoinGroup): Promise<IGroup | null> {
         const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
 
         if (errorResponse && errorResponse.error?.message) {
-        throw new Error(errorResponse.error?.message); 
+          throw new Error(errorResponse.error?.message); 
         } else {
-        throw new Error('Erro desconhecido ao entrar no grupo'); 
+          throw new Error('Erro desconhecido ao entrar no grupo'); 
         }
     }
 }
@@ -103,7 +123,7 @@ export async function deleteGroup(id: number): Promise<void | null> {
         if (errorResponse && errorResponse.error?.message) {
           throw new Error(errorResponse.error?.message); 
         } else {
-          throw new Error('Erro desconhecido ao entrar no grupo'); 
+          throw new Error('Erro desconhecido ao deletar grupo'); 
         }
     }
 }
@@ -123,7 +143,7 @@ export async function leaveGroup(groupId: number, userId: number): Promise<void 
         if (errorResponse && errorResponse.error?.message) {
           throw new Error(errorResponse.error?.message); 
         } else {
-          throw new Error('Erro desconhecido ao entrar no grupo'); 
+          throw new Error('Erro desconhecido ao sair do grupo'); 
         }
     }
 }
@@ -143,7 +163,7 @@ export async function deleteMember(groupId: number, userId: number): Promise<voi
       if (errorResponse && errorResponse.error?.message) {
         throw new Error(errorResponse.error?.message); 
       } else {
-        throw new Error('Erro desconhecido ao entrar no grupo'); 
+        throw new Error('Erro desconhecido ao deletar membro do grupo'); 
       }
   }
 }

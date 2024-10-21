@@ -37,9 +37,9 @@ export function DrawerEditGroup({ isOpen, onClose, initialGroup }: DrawerEditGro
           message.success("Grupo editado com sucesso!");
           onClose();
         },
-        onError: () => {
-          message.error("Erro ao editar o grupo. Tente novamente.");
-        },
+        onError: (error: any) => {
+          message.error(error.message);
+        }
       }
     );
   };

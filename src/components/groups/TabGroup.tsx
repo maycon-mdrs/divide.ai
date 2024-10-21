@@ -122,9 +122,9 @@ export function TabGroup({ group }: TabGroupProps) {
             message.success('Você removeu o usuário do grupo com sucesso!');
             setIsModalOpen(false);
           },
-          onError: () => {
-            message.error('Erro ao sair do grupo.');
-          },
+          onError: (error: any) => {
+            message.error(error.message);
+          }
         });
       };
   
