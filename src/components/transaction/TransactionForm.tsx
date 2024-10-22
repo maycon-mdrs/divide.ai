@@ -100,10 +100,10 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
   };
 
   const handleCategoryChange = (value: string) => {
-    const selectedCategory = data?.find(category => category.id === Number(value));
+    const selectedCategory = data?.find(category => category.name === value); 
     if (selectedCategory) {
-      setCategoryId(selectedCategory!.id!);
-      //form.setFieldsValue({ categoryId: selectedCategory.id });  // Atualizar o campo corretamente
+      setCategoryId(selectedCategory.id!);  
+      form.setFieldsValue({ categoryId: selectedCategory.id });  
     }
   };
 
@@ -220,34 +220,35 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
             className="mt-1 mb-2"
           >
             <Select
+              value={data?.find(category => category.id === categoryId)?.name || undefined} 
               onValueChange={handleCategoryChange}
             >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Selecione uma categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Categorias</SelectLabel>
-                  {data
-                    ?.filter((category: ICategory) => {
-                      if (toggleGroup === "inflow") {
-                        return category.expense === false;
-                      } else if (toggleGroup === "outflow") {
-                        return category.expense === true;
-                      }
-                      return false;
-                    })
-                    .map((category: ICategory) => (
-                      <SelectItem key={category.id} value={category.name}>
-                        <div className="flex justify-center">
-                          <span className="w-5 h-5 rounded-full mr-2" style={{ backgroundColor: category.color }}></span>
-                          <p>{category.name}</p>
-                        </div>
-                      </SelectItem>
-                    ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+  <SelectTrigger className="w-full">
+    <SelectValue placeholder="Selecione uma categoria" />
+  </SelectTrigger>
+  <SelectContent>
+    <SelectGroup>
+      <SelectLabel>Categorias</SelectLabel>
+      {data
+        ?.filter((category: ICategory) => {
+          if (toggleGroup === "inflow") {
+            return category.expense === false;
+          } else if (toggleGroup === "outflow") {
+            return category.expense === true;
+          }
+          return false;
+        })
+        .map((category: ICategory) => (
+          <SelectItem key={category.id} value={category.name}>
+            <div className="flex justify-center">
+              <span className="w-5 h-5 rounded-full mr-2" style={{ backgroundColor: category.color }}></span>
+              <p>{category.name}</p>
+            </div>
+          </SelectItem>
+        ))}
+    </SelectGroup>
+  </SelectContent>
+</Select>
           </Form.Item>
         </>
       )}
