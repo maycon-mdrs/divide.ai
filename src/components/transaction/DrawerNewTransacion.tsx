@@ -10,14 +10,14 @@ import {
 import { Button } from "@/components/ui/button";
 import { message } from "antd";
 import { ITransacion} from "@/interfaces/ITransacion";
-import { TrasacionForm } from "./TransacionForm";
-import { useTransacionMutate } from "@/hooks/transacion/transacionHook";
+import { TransactionForm } from "./TransactionForm";
+import { useTransactionMutate } from "@/hooks/transacion/transacionHook";
 
 export function DrawerNewTransacion() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
-  const { mutate: createTransacion } = useTransacionMutate();
+  const { mutate: createTransacion } = useTransactionMutate();
    
   const handleClose = () => {
     setIsOpen(false);
@@ -50,7 +50,7 @@ const handleTransacionSave = (values: ITransacion) => {
           <DrawerHeader>
             <DrawerTitle>Criar nova transação</DrawerTitle>
             <DrawerDescription>Preencha os detalhes para criar uma nova transação.</DrawerDescription>
-            <TrasacionForm onSubmit={handleTransacionSave} isLoading={isLoading} />
+            <TransactionForm onSubmit={handleTransacionSave} isLoading={isLoading} />
           </DrawerHeader>
         </div>
       </DrawerContent>

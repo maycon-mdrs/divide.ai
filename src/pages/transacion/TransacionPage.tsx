@@ -1,6 +1,6 @@
-import { TableTransacion } from "@/components/transacion/TableTransacion"
+import { TableTransacion } from "@/components/transaction/TableTransacion"
 import { SheetMenu } from "@/components/global/sidebar/SheetMenu";
-import { DrawerNewTransacion } from "@/components/transacion/DrawerNewTransacion";
+import { DrawerNewTransacion } from "@/components/transaction/DrawerNewTransacion";
 
 
 export function TransacionPage() {

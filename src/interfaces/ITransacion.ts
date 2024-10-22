@@ -13,7 +13,8 @@ export interface ITransacionResponse  {
     id?: number;
     amount: number;
     description: string;
-    category: Category;
+    category?: Category;
+    categoryId?: number;
     userId: number;
     paidAt?: Date | null;
 };

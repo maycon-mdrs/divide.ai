@@ -6,27 +6,27 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { ICategory } from "@/interfaces/ICategory";
-import { TrasacionForm } from "./TransacionForm";
+import { TransactionForm } from "./TransactionForm";
 import { message } from "antd";
-import { useCategoryUpdate } from "@/hooks/category/categoryHook"; 
+import { useTransactionUpdate } from "@/hooks/transacion/transacionHook"; 
+import { ITransacion, ITransacionResponse } from "@/interfaces/ITransacion";
 
-interface DrawerCategoryProps {
-  initialCategory: ICategory; 
+interface DrawerTransactionProps {
+  initialTransaction: ITransacion; 
   isOpen: boolean; 
   onClose: () => void; 
 }
 
-export function DrawerCategory({ initialCategory, isOpen, onClose }: DrawerCategoryProps) {
+export function DrawerTransaction({ initialTransaction, isOpen, onClose }: DrawerTransactionProps) {
   const [isLoading, setLoading] = useState(false);
 
-  const { mutate: updateCategory } = useCategoryUpdate();
+  const { mutate: updateTransaction } = useTransactionUpdate();
 
-  const handleCategorySave = (values: ICategory) => {
+  const handleTransactionSave = (values: ITransacion) => {
     setLoading(true);
 
-    updateCategory(
-      { ...values, id: initialCategory.id },
+    updateTransaction(
+      { ...values, id: initialTransaction.id },
       {
         onSuccess: () => {
           message.success("Transação editada com sucesso!");
@@ -50,10 +50,10 @@ export function DrawerCategory({ initialCategory, isOpen, onClose }: DrawerCateg
             <DrawerDescription>
               Altere os detalhes da transação.
             </DrawerDescription>
-            <TrasacionForm
-              onSubmit={handleCategorySave}
+            <TransactionForm
+              onSubmit={handleTransactionSave}
               isLoading={isLoading}
-              initialData={initialCategory} 
+              initialData={initialTransaction} 
             />
           </DrawerHeader>
         </div>

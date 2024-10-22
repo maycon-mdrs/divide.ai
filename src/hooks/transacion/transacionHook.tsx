@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteTransacion, getAllTransacions, createTransacion, getTransacionById, updateTransacion, getAllTransacionsByUser } from "@/services/TransacionService";
 
-export function useCategoryData() {
+export function useTransactionData() {
     const query = useQuery({
         queryFn:  getAllTransacions,
         queryKey: ["transacions-data"],
@@ -10,44 +10,44 @@ export function useCategoryData() {
     return query;
 }
 
-export function useTransacionMutate() {
+export function useTransactionMutate() {
     const queryClient = useQueryClient();
     const mutate = useMutation({
         mutationFn:  createTransacion,
         onSuccess: () => {  
-            queryClient.invalidateQueries({ queryKey: ['transacions-data-by-user'] });
+            queryClient.invalidateQueries({ queryKey: ['transactions-data-by-user'] });
         }
     });
 
     return mutate;
 }
-export function useTransacionDataByUser() {
+export function useTransactionDataByUser() {
     const query = useQuery({
         queryFn: () => getAllTransacionsByUser(),
-        queryKey: ["transacions-data-by-user"],
+        queryKey: ["transactions-data-by-user"],
     });
 
     return query;
 }
 
-export function useTransacionUpdate() {
+export function useTransactionUpdate() {
     const queryClient = useQueryClient();
     const mutate = useMutation({
         mutationFn:  updateTransacion,
         onSuccess: () => {  
-            queryClient.invalidateQueries({ queryKey: ['transacions-data-by-user'] });
+            queryClient.invalidateQueries({ queryKey: ['transactions-data-by-user'] });
         }
     });
 
     return mutate;
 }
 
-export function useTransacionDelete() {
+export function useTransactionDelete() {
     const queryClient = useQueryClient();
     const mutate = useMutation({
         mutationFn:  deleteTransacion,
         onSuccess: () => {  
-            queryClient.invalidateQueries({ queryKey: ['transacions-data-by-user'] });
+            queryClient.invalidateQueries({ queryKey: ['transactions-data-by-user'] });
         }
     });
 

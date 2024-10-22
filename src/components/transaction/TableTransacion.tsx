@@ -20,29 +20,39 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2, FilePenLine } from 'lucide-react';
-import { useTransacionDelete, useTransacionDataByUser } from "@/hooks/transacion/transacionHook";
+import { useTransactionDelete, useTransactionDataByUser } from "@/hooks/transacion/transacionHook";
 import { useCategoryDataByUser } from "@/hooks/category/categoryHook";
 import { ICategory } from '@/interfaces/ICategory';
-import { DrawerCategory } from "./DrawerEditTransacion";
+import { DrawerTransaction } from "./DrawerEditTransaction";
 import { ITransacion, ITransacionResponse } from "@/interfaces/ITransacion";
 
 
 export function TableTransacion() {
-    const { data } = useTransacionDataByUser();
+    const { data } = useTransactionDataByUser();
 
     console.log("data vem assim", data);
     const [isPaid, setIsPaid] = useState(false);
-    const [selectedTransacion, setSelectedTransacion] = useState<ITransacionResponse | null>(null);
+    const [selectedTransacion, setSelectedTransacion] = useState<ITransacion | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-    const handleEdit = (transacion: ITransacionResponse) => {
-        setSelectedTransacion(transacion);
+    const handleEdit = (transaction: ITransacionResponse) => {
+        setSelectedTransacion(convertToITransacion(transaction));
         setIsDrawerOpen(true);
     };
     const handleSwitchChange = (id: number, isPaid: boolean) => {
         //updateCategoryPaymentStatus(id, isPaid); 
         // add logica aqui para ajustar no front
     };
+    const convertToITransacion = (response: ITransacionResponse): ITransacion => {
+        return {
+          id: response.id,
+          amount: response.amount,
+          description: response.description,
+          categoryId: response.categoryId ?? response.category?.id ?? 0, // Assuming categoryId could be derived from category if it's available
+          userId: response.userId,
+          paidAt: response.paidAt,
+        };
+      };
 
     const handleDrawerClose = () => {
         setIsDrawerOpen(false);
@@ -71,7 +81,7 @@ export function TableTransacion() {
                                 </div>
                             </TableCell>
                             <TableCell>
-                                <p className="w-fit p-1 px-4 rounded-xl" style={{ backgroundColor: transaction.category.color }}>{transaction.category.name}</p></TableCell>
+                                <p className="w-fit p-1 px-4 rounded-xl" style={{ backgroundColor: transaction.category!.color! }}>{transaction.category!.name!}</p></TableCell>
                             <TableCell>
                                 <p> {new Intl.NumberFormat('pt-BR', {
                                     minimumFractionDigits: 2,
@@ -86,7 +96,7 @@ export function TableTransacion() {
 
                             <TableCell>
                                 <div className="flex justify-center">
-                                    <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(transaction)}>
+                                    <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(convertToITransacion(transaction))}>
                                         <FilePenLine className="w-5 h-5" />
                                     </Button>
                                     <ButtonDelete transacion={transaction} />
@@ -99,8 +109,8 @@ export function TableTransacion() {
 
             {/* Drawer para edição */}
             {selectedTransacion && (
-                <DrawerCategory
-                    initialCategory={selectedTransacion}
+                <DrawerTransaction
+                    initialTransaction={selectedTransacion}
                     isOpen={isDrawerOpen}
                     onClose={handleDrawerClose}
                 />
@@ -109,9 +119,9 @@ export function TableTransacion() {
     );
 }
 
-function ButtonDelete({ transacion }: { transacion: ITransacionResponse }) {
+function ButtonDelete({ transacion }: { transacion: ITransacionResponse | ITransacion }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { mutate, isSuccess } = useTransacionDelete();
+    const { mutate, isSuccess } = useTransactionDelete();
 
     const handleClose = () => {
         setIsModalOpen(false);
