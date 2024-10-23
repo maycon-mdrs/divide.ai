@@ -13,18 +13,16 @@ import {
   ToggleGroupItem,
 } from "@/components/ui/toggle-group";
 
-
 interface CategoryFormProps {
   initialData?: ICategory | null;
   onSubmit: (values: ICategory) => void;
   isLoading: boolean;
 }
 
-
 export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormProps) {
   const [form] = Form.useForm();
   const [selectedColor, setSelectedColor] = useState<string>(initialData?.color || '#fff');
-  const [toggleGroup, setToggleGroup] = useState<string | null>(null);
+  const [toggleGroup, setToggleGroup] = useState<string | null>(initialData ? (initialData.expense ? "outflow" : "inflow") : null); // Set to null if no initialData
   const auth = useAuth();
 
   useEffect(() => {
@@ -33,8 +31,15 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
         name: initialData.name,
         description: initialData.description,
         color: initialData.color,
+        toggleGroup: initialData.expense ? "outflow" : "inflow", // Set initial value based on expense
       });
       setSelectedColor(initialData.color);
+      setToggleGroup(initialData.expense ? "outflow" : "inflow"); // Initialize toggleGroup based on initialData
+    } else {
+      // Reset form and toggleGroup when creating a new category
+      form.resetFields();
+      setSelectedColor('#fff');
+      setToggleGroup(null);
     }
   }, [initialData, form]);
 
@@ -48,7 +53,7 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
       name: values.name,
       description: values.description,
       color: selectedColor,
-      expense: toggleGroup === "inflow" ? false : true,
+      expense: toggleGroup === "inflow" ? false : true, // Set expense based on toggleGroup
       userId: Number(auth.id!),
     };
     onSubmit(data);
@@ -64,6 +69,7 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
         name: initialData?.name || '',
         description: initialData?.description || '',
         color: selectedColor,
+        toggleGroup: initialData ? (initialData.expense ? "outflow" : "inflow") : undefined, // Don't pre-select in creation mode
       }}
     >
       <Label htmlFor="name" className="font-medium">Nome da Categoria</Label>
@@ -84,7 +90,7 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
         <Input id="description" />
       </Form.Item>
 
-      <Label htmlFor="description" className="font-medium">Tipo da categoria</Label>
+      <Label htmlFor="toggleGroup" className="font-medium">Tipo da categoria</Label>
       <Form.Item
         name="toggleGroup"
         rules={[{ required: true, message: 'Por favor, selecione uma opção!' }]}
@@ -95,6 +101,7 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
             setToggleGroup(value);
             form.setFieldsValue({ toggleGroup: value });
           }}
+          value={toggleGroup!} // Bind toggleGroup state
           type="single" variant="outline" size="lg" className="gap-5 text-primary"
         >
           <ToggleGroupItem
