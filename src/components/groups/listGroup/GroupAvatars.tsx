@@ -1,12 +1,12 @@
 import { Avatar, AvatarFallback } from "../../ui/avatar";
-import { IUserCard } from "@/interfaces/IUser";
+import { IUserResponse } from "@/interfaces/IUser";
 
 interface GroupAvatarsProps {
-    users: IUserCard[];
+    users: IUserResponse[];
     limit?: number;
 };
 
-const generateColor = (id: number) => {
+export const generateColor = (id: number) => {
     const colors = [
         "bg-red-500 text-white",
         "bg-blue-500 text-white",

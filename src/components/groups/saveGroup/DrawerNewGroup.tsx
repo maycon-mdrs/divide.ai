@@ -9,31 +9,36 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import { IGroupForm } from "@/interfaces/IGroup";
-import { nanoid } from "nanoid"; 
 import { message } from "antd";
 import { GroupForm } from "./GroupForm";
 import { DialogCode } from "../DialogCode";
+import { useGroupMutate } from "@/hooks/group/groupHook";
 
 export function DrawerNewGroup() {
+  const { mutate: createGroup, isPending } = useGroupMutate(); 
+
   const [isOpen, setIsOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [groupCode, setGroupCode] = useState<string | null>(null);
-  const [isLoading, setLoading] = useState(false);
 
   const handleClose = () => {
     setIsOpen(false);
-};
+  };
 
   const handleGroupSave = (values: IGroupForm) => {
-    setLoading(true);
-    setTimeout(() => {
-      const code = nanoid(8);
-      setGroupCode(code);
-      setIsDialogOpen(true);
-      message.success("Grupo criado com sucesso!");
-      setLoading(false);
-      setIsOpen(false);
-    }, 500);
+    createGroup(values, {
+      onSuccess: (data) => {
+        if (data) {
+          setGroupCode(data.code); 
+          setIsDialogOpen(true);
+          message.success("Grupo criado com sucesso!");
+          setIsOpen(false);
+        }
+      },
+      onError: (error: any) => {
+        message.error(error.message);
+      }
+    });
   };
 
   return (
@@ -46,7 +51,7 @@ export function DrawerNewGroup() {
           <DrawerHeader>
             <DrawerTitle>Criar novo grupo</DrawerTitle>
             <DrawerDescription>Preencha os detalhes para criar um novo grupo.</DrawerDescription>
-            <GroupForm onSubmit={handleGroupSave} isLoading={isLoading} />
+            <GroupForm onSubmit={handleGroupSave} isLoading={isPending} /> 
           </DrawerHeader>
         </div>
       </DrawerContent>

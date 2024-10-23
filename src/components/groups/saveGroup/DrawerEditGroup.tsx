@@ -5,43 +5,43 @@ import {
     DrawerHeader,
     DrawerTitle,
 } from "@/components/ui/drawer";
-import { IGroupForm } from "@/interfaces/IGroup";
+import { IGroup, IGroupForm } from "@/interfaces/IGroup";
 import { message } from "antd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GroupForm } from "./GroupForm";
+import { useGroupUpdate } from "@/hooks/group/groupHook";
 
 interface DrawerEditGroupProps {
   isOpen: boolean;
   onClose: () => void;
-  groupId: number;
+  initialGroup: IGroup;
 }
 
-export function DrawerEditGroup({ isOpen, onClose, groupId }: DrawerEditGroupProps) {
-  const [groupData, setGroupData] = useState<IGroupForm | null>(null);
-  const [isLoading, setLoading] = useState(false);
+export function DrawerEditGroup({ isOpen, onClose, initialGroup }: DrawerEditGroupProps) {
+  const { mutate: updateGroup, isPending } = useGroupUpdate();
 
-  useEffect(() => {
-    if (groupId && isOpen) {
-      setLoading(true);
-      setTimeout(() => {
-        const fetchedGroup = {
-          id: groupId,
-          name: `Grupo ${groupId}`,
-          description: `Descrição do Grupo ${groupId}`,
-        };
-        setGroupData(fetchedGroup);
-        setLoading(false);
-      }, 800);
-    }
-  }, [groupId, isOpen]);
+  const mapInitialGroupToFormValues = (group: IGroup): IGroupForm => {
+    return {
+      id: group.id,
+      name: group.name,
+      description: group.description,
+      createdBy: group.createdBy?.id, 
+    };
+  };
 
   const handleGroupSave = (values: IGroupForm) => {
-    setLoading(true);
-    setTimeout(() => {
-      message.success("Grupo atualizado com sucesso!");
-      setLoading(false);
-      onClose(); 
-    }, 800);
+    updateGroup(
+      { ...values, id: initialGroup.id },
+      {
+        onSuccess: () => {
+          message.success("Grupo editado com sucesso!");
+          onClose();
+        },
+        onError: (error: any) => {
+          message.error(error.message);
+        }
+      }
+    );
   };
 
   return (
@@ -52,9 +52,9 @@ export function DrawerEditGroup({ isOpen, onClose, groupId }: DrawerEditGroupPro
             <DrawerTitle>Editar Grupo</DrawerTitle>
             <DrawerDescription>Atualize as informações do grupo abaixo.</DrawerDescription>
             <GroupForm
-              initialData={groupData}
+              initialData={mapInitialGroupToFormValues(initialGroup)} 
               onSubmit={handleGroupSave}
-              isLoading={isLoading}
+              isLoading={isPending}
             />
           </DrawerHeader>
         </div>
