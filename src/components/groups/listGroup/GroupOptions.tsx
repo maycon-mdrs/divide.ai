@@ -1,13 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Edit, Info, Trash } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useOnClickOutside } from 'usehooks-ts';
 import { useMediaQuery } from 'react-responsive';
-import { 
-    DropdownMenu,  
-    DropdownMenuItem, 
-    DropdownMenuContent, 
-    DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { EllipsisVertical } from "lucide-react";  
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu";
+import { EllipsisVertical } from "lucide-react";
 import { DialogCode } from "../DialogCode";
 import { DrawerEditGroup } from "../saveGroup/DrawerEditGroup";
 import {
@@ -29,15 +31,15 @@ import {
 import { message } from "antd";
 
 interface GroupOptionsProps {
-    group: IGroup;
+  group: IGroup;
 }
 
 export function GroupOptions({ group }: GroupOptionsProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); 
-  const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false); 
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isLeaveDialogOpen, setIsLeaveDialogOpen] = useState(false);
 
   const userId = Number(getUserLocalStorage()?.id);
   const { mutate: deleteGroup } = useGroupDelete();
@@ -45,6 +47,12 @@ export function GroupOptions({ group }: GroupOptionsProps) {
 
   const isDesktop = useMediaQuery({ query: "(min-width: 768px)" });
   const isCreator = Number(group.createdBy.id) === userId;
+
+  const drawerRef = useRef(null);
+
+  useOnClickOutside(drawerRef, () => {
+    if (isDrawerOpen) setIsDrawerOpen(false);
+  });
 
   const handleEditGroup = () => {
     setIsEditDrawerOpen(true);
@@ -77,7 +85,7 @@ export function GroupOptions({ group }: GroupOptionsProps) {
       }
     });
   };
-  
+
   return (
     <>
       {isDesktop ? (
@@ -91,17 +99,17 @@ export function GroupOptions({ group }: GroupOptionsProps) {
             {isCreator && (
               <DropdownMenuItem onClick={handleEditGroup}>Editar</DropdownMenuItem>
             )}
-          
-          {!group.discontinued && (
-            <DropdownMenuItem onClick={handleGetCode}>
-              Obter código
-            </DropdownMenuItem>
-          )}
+
+            {!group.discontinued && (
+              <DropdownMenuItem onClick={handleGetCode}>
+                Obter código
+              </DropdownMenuItem>
+            )}
 
             {isCreator ? (
               <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
                 Remover
-              </DropdownMenuItem> 
+              </DropdownMenuItem>
             ) : (
               <DropdownMenuItem onClick={() => setIsLeaveDialogOpen(true)}>
                 Sair
@@ -119,7 +127,7 @@ export function GroupOptions({ group }: GroupOptionsProps) {
               <EllipsisVertical />
             </div>
           </DrawerTrigger>
-          <DrawerContent className="flex justify-center items-center">
+          <DrawerContent ref={drawerRef} className="flex justify-center items-center">
             <DialogTitle className="sr-only">Opções do Grupo</DialogTitle>
             <div className="flex flex-col space-y-4 p-4 w-1/2 max-w-md mx-auto">
               {isCreator && (
