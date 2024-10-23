@@ -13,7 +13,7 @@ import { ITransacion} from "@/interfaces/ITransacion";
 import { TransactionForm } from "./TransactionForm";
 import { useTransactionMutate } from "@/hooks/transacion/transacionHook";
 
-export function DrawerNewTransacion() {
+export function DrawerNewTransaction() {
   const [isOpen, setIsOpen] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setLoading] = useState(false);
