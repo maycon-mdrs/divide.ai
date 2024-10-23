@@ -9,7 +9,7 @@ interface GroupCardProps {
 
 export function GroupCard({ group }: GroupCardProps) {
   const handleClick = (event: React.MouseEvent) => {
-    event.stopPropagation(); // Evita propagação do clique para o card
+    event.stopPropagation(); 
   };
 
   return (
@@ -20,14 +20,22 @@ export function GroupCard({ group }: GroupCardProps) {
     >
       <CardHeader className="flex flex-row justify-between items-start">
         <div className="flex flex-col">
-          <CardTitle>
+        <CardTitle>
               <span
                 className="inline-block bg-[#E9F3F2] text-[#438883] 
                           px-3 py-1 rounded-full text-lg font-medium mb-4"
               >
                 {group.name}
               </span>
-            </CardTitle>
+              {group.discontinued && (
+                <span
+                  className="inline-block bg-[hsl(var(--muted))] text-[hsl(var(--muted-foreground))]
+                            px-3 py-1 rounded-full text-lg font-medium mb-4 ml-2"
+                >
+                  Descontinuado
+                </span>
+              )}
+          </CardTitle>
           <CardDescription className="text-sm text-[hsl(var(--muted-foreground))]">
             Criado por: {group.createdBy.firstName} {group.createdBy.lastName}
           </CardDescription>

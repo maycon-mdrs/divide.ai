@@ -7,6 +7,7 @@ export interface IGroup {
     createdBy: IUserResponse;
     members: IUserResponse[];
     code: string;
+    discontinued?: boolean;
 }
 
 export interface IGroupForm {

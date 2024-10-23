@@ -91,7 +91,13 @@ export function GroupOptions({ group }: GroupOptionsProps) {
             {isCreator && (
               <DropdownMenuItem onClick={handleEditGroup}>Editar</DropdownMenuItem>
             )}
-            <DropdownMenuItem onClick={handleGetCode}>Obter código</DropdownMenuItem>
+          
+          {!group.discontinued && (
+            <DropdownMenuItem onClick={handleGetCode}>
+              Obter código
+            </DropdownMenuItem>
+          )}
+
             {isCreator ? (
               <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)}>
                 Remover
@@ -126,14 +132,16 @@ export function GroupOptions({ group }: GroupOptionsProps) {
                   <span>Editar</span>
                 </Button>
               )}
-              <Button
-                variant="secondary"
-                onClick={handleGetCode}
-                className="flex items-center space-x-2"
-              >
-                <Info className="w-4 h-4" />
-                <span>Obter código</span>
-              </Button>
+              {!group.discontinued && (
+                <Button
+                  variant="secondary"
+                  onClick={handleGetCode}
+                  className="flex items-center space-x-2"
+                >
+                  <Info className="w-4 h-4" />
+                  <span>Obter código</span>
+                </Button>
+              )}
               {isCreator ? (
                 <Button
                   variant="destructive"

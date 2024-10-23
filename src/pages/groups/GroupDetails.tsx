@@ -26,9 +26,11 @@ export function GroupDetails() {
       <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
         <h2 className="text-3xl font-bold tracking-tight">{group.name}</h2> 
         <div className="flex items-center space-x-2">
-          <Button variant="divideDark" onClick={handleDialogOpen}>
-            Obter código
-          </Button>
+          {!group.discontinued &&
+            <Button variant="divideDark" onClick={handleDialogOpen}>
+              Obter código
+            </Button>
+          }
           <DialogCode
             isOpen={isDialogOpen}
             groupCode={group.code}
