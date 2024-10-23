@@ -1,6 +1,6 @@
 import { TableTransacion } from "@/components/transaction/TableTransacion"
 import { SheetMenu } from "@/components/global/sidebar/SheetMenu";
-import { DrawerNewTransacion } from "@/components/transaction/DrawerNewTransacion";
+import { DrawerNewTransaction } from "@/components/transaction/DrawerNewTransaction";
 
 
 export function TransacionPage() {
@@ -10,7 +10,7 @@ export function TransacionPage() {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Transações</h2>
         <div className="flex items-center space-x-2">
-          <DrawerNewTransacion />
+          <DrawerNewTransaction />
         </div>
       </div>
 
