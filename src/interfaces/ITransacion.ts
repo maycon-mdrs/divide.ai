@@ -10,7 +10,7 @@ export interface ITransacion  {
 };
 
 export interface ITransacionResponse  {
-    id?: number;
+    id: number;
     amount: number;
     description: string;
     category?: Category;

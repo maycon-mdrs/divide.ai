@@ -26,36 +26,42 @@ import { Switch } from "@/components/ui/switch";
 import { ITransacion, ITransacionResponse } from "@/interfaces/ITransacion";
 
 interface TransacionFormProps {
-  initialData?: ITransacion | null;
+  initialData?: ITransacion | ITransacionResponse | null;
   onSubmit: (values: ITransacion) => void;
   isLoading: boolean;
 }
 
 export function TransactionForm({ initialData, onSubmit, isLoading }: TransacionFormProps) {
   const [form] = Form.useForm();
-  const { data } = useCategoryDataByUser();
+  const { data } = useCategoryDataByUser(); // data com todas as categorias do user logado
   const auth = useAuth();
 
   const [money, setMoney] = useState<number>(initialData?.amount || 0);
   const [categoryId, setCategoryId] = useState<number>(initialData?.categoryId || 0);
-  const [isPaid, setIsPaid] = useState<boolean>(!!initialData?.paidAt);
-  const [toggleGroup, setToggleGroup] = useState<string | null>(initialData ? (initialData.amount > 0 ? 'inflow' : 'outflow') : null);
-
+  const [isPaid, setIsPaid] = useState<boolean>(initialData?.paidAt ? true : false);
+  const [categoryOutflow, setCategoryOutflow] = useState<boolean | number | undefined>(data?.find(category => category.id === initialData?.categoryId)?.expense);
+  const [toggleGroup, setToggleGroup] = useState<string | null>(data?.find(category => category.id === initialData?.categoryId)?.expense ? 'inflow' : 'outflow');
+  console.log("teste: ", data?.find(category => category.id === initialData?.categoryId)?.name || undefined);
   useEffect(() => {
     if (initialData) {
-      const positiveAmount = Math.abs(initialData.amount);
 
+      console.log("data no inicio: ", initialData);
+      const positiveAmount = Math.abs(initialData.amount);
+      const categoryOutflow = data?.find(category => category.id === initialData?.categoryId)?.expense;
       setMoney(positiveAmount);
-      setCategoryId(initialData.categoryId);
-      setIsPaid(!!initialData.paidAt);
-      setToggleGroup(initialData.amount > 0 ? 'inflow' : 'outflow');
+      setCategoryId(initialData.categoryId!);
+      setIsPaid(initialData?.paidAt ? true : false);
+
+      const toggleValue = categoryOutflow ? 'outflow' : 'inflow';
+      setToggleGroup(toggleValue);
 
       form.setFieldsValue({
+        id: initialData.id,
         description: initialData.description,
-        value: positiveAmount,
-        categoryId: initialData.categoryId,
-        paidAt: isPaid ? new Date() : null,
-        toggleGroup: initialData.amount > 0 ? 'inflow' : 'outflow',
+        value: initialData.amount,
+        categoryId: data?.find(category => category.id === categoryId)?.name,
+        paidAt: categoryOutflow ? new Date() : null,
+        toggleGroup: toggleValue,
       });
     }
   }, [initialData, form]);
@@ -64,16 +70,16 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
     const data: ITransacion = {
       description: values.description,
       amount: money,
-      categoryId: values.categoryId,
+      categoryId: categoryId,
       userId: Number(auth.id!),
-      paidAt: isPaid ? new Date() : null,
+      paidAt: categoryOutflow && isPaid ? new Date() : null,
     };
     onSubmit(data);
   };
 
   const handleMoneyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-  
+
     if (value === '') {
       form.setFieldsValue({ money: 0 });
       setMoney(0);
@@ -85,7 +91,7 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
       }
     }
   };
-  
+
   function onClick(adjustment: number) {
     let newMoney = parseFloat((money + adjustment).toFixed(2));
     if (newMoney < 0) {
@@ -100,10 +106,11 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
   };
 
   const handleCategoryChange = (value: string) => {
-    const selectedCategory = data?.find(category => category.name === value); 
+    const selectedCategory = data?.find(category => category.name === value);
     if (selectedCategory) {
-      setCategoryId(selectedCategory.id!);  
-      form.setFieldsValue({ categoryId: selectedCategory.id });  
+      setCategoryId(selectedCategory.id!); // Set categoryId as the numeric ID
+      form.setFieldsValue({ categoryId: selectedCategory.name });
+      setCategoryOutflow(data?.find(category => category.id === selectedCategory.id)?.expense);
     }
   };
 
@@ -116,8 +123,10 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
       initialValues={{
         description: initialData?.description || '',
         value: initialData?.amount || 0,
+
         toggleGroup: initialData ? (initialData.amount > 0 ? 'inflow' : 'outflow') : null,
       }}
+
     >
       <Label htmlFor="description" className="font-medium">Descrição</Label>
       <Form.Item
@@ -160,7 +169,7 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
                 boxShadow: 'none',
                 padding: 0,
                 margin: 0,
-                appearance: 'none', 
+                appearance: 'none',
                 height: 80,
                 lineHeight: 80,
                 paddingBottom: 20
@@ -219,36 +228,37 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
             rules={[{ required: true, message: 'Por favor, selecione uma categoria!' }]}
             className="mt-1 mb-2"
           >
+
             <Select
-              value={data?.find(category => category.id === categoryId)?.name || undefined} 
+              value={data?.find(category => category.id === categoryId)?.name}
               onValueChange={handleCategoryChange}
             >
-  <SelectTrigger className="w-full">
-    <SelectValue placeholder="Selecione uma categoria" />
-  </SelectTrigger>
-  <SelectContent>
-    <SelectGroup>
-      <SelectLabel>Categorias</SelectLabel>
-      {data
-        ?.filter((category: ICategory) => {
-          if (toggleGroup === "inflow") {
-            return category.expense === false;
-          } else if (toggleGroup === "outflow") {
-            return category.expense === true;
-          }
-          return false;
-        })
-        .map((category: ICategory) => (
-          <SelectItem key={category.id} value={category.name}>
-            <div className="flex justify-center">
-              <span className="w-5 h-5 rounded-full mr-2" style={{ backgroundColor: category.color }}></span>
-              <p>{category.name}</p>
-            </div>
-          </SelectItem>
-        ))}
-    </SelectGroup>
-  </SelectContent>
-</Select>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Selecione uma categoria" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Categorias</SelectLabel>
+                  {data
+                    ?.filter((category: ICategory) => {
+                      if (toggleGroup === "inflow") {
+                        return category.expense === false;
+                      } else if (toggleGroup === "outflow") {
+                        return category.expense === true;
+                      }
+                      return false;
+                    })
+                    .map((category: ICategory) => (
+                      <SelectItem key={category.id} value={category.name}>
+                        <div className="flex justify-center">
+                          <span className="w-5 h-5 rounded-full mr-2" style={{ backgroundColor: category.color }}></span>
+                          <p>{category.name}</p>
+                        </div>
+                      </SelectItem>
+                    ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </Form.Item>
         </>
       )}
@@ -261,7 +271,7 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
             className="mt-1 mb-2"
           >
             <div className="flex items-center space-x-2">
-              <Switch id="airplane-mode bg-[#29756f]" checked={isPaid} onCheckedChange={handleSwitchChange} />
+              <Switch id="airplane-mode bg-[#29756f]" checked={isPaid ? true : false} onCheckedChange={handleSwitchChange} />
               <Label htmlFor="airplane-mode">{isPaid ? "Sim, foi paga." : "Não foi pago."}</Label>
             </div>
           </Form.Item>

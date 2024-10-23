@@ -12,7 +12,7 @@ import { useTransactionUpdate } from "@/hooks/transacion/transacionHook";
 import { ITransacion, ITransacionResponse } from "@/interfaces/ITransacion";
 
 interface DrawerTransactionProps {
-  initialTransaction: ITransacion; 
+  initialTransaction: ITransacionResponse; 
   isOpen: boolean; 
   onClose: () => void; 
 }
@@ -24,13 +24,15 @@ export function DrawerTransaction({ initialTransaction, isOpen, onClose }: Drawe
 
   const handleTransactionSave = (values: ITransacion) => {
     setLoading(true);
-
+    console.log("no envio para upodate: ",values);
     updateTransaction(
       { ...values, id: initialTransaction.id },
       {
+        
         onSuccess: () => {
           message.success("Transação editada com sucesso!");
           setLoading(false);
+          
           onClose(); 
         },
         onError: () => {

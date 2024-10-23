@@ -30,25 +30,22 @@ import { ITransacion, ITransacionResponse } from "@/interfaces/ITransacion";
 export function TableTransacion() {
     const { data } = useTransactionDataByUser();
 
-    console.log("data vem assim", data);
     const [isPaid, setIsPaid] = useState(false);
-    const [selectedTransacion, setSelectedTransacion] = useState<ITransacion | null>(null);
+    const [selectedTransacion, setSelectedTransacion] = useState<ITransacionResponse | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     const handleEdit = (transaction: ITransacionResponse) => {
+        // console.log("triction convertida: ", convertToITransacion(transaction));
         setSelectedTransacion(convertToITransacion(transaction));
         setIsDrawerOpen(true);
     };
-    const handleSwitchChange = (id: number, isPaid: boolean) => {
-        //updateCategoryPaymentStatus(id, isPaid); 
-        // add logica aqui para ajustar no front
-    };
     const convertToITransacion = (response: ITransacionResponse): ITransacion => {
+        console.log("response do editar: ", response.id);
         return {
           id: response.id,
           amount: response.amount,
           description: response.description,
-          categoryId: response.categoryId ?? response.category?.id ?? 0, // Assuming categoryId could be derived from category if it's available
+          categoryId: response.category?.id ?? response.category?.id ?? 0, // Assuming categoryId could be derived from category if it's available
           userId: response.userId,
           paidAt: response.paidAt,
         };
@@ -74,6 +71,7 @@ export function TableTransacion() {
                 <TableBody>
 
                     {Array.isArray(data) && data.map((transaction: ITransacionResponse) => (
+                        
                         <TableRow key={transaction.id}>
                             <TableCell className="w-5/12">
                                 <div className="flex flex-row items-center">
@@ -96,7 +94,7 @@ export function TableTransacion() {
 
                             <TableCell>
                                 <div className="flex justify-center">
-                                    <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(convertToITransacion(transaction))}>
+                                    <Button variant="link" className="text-gray p-1" onClick={() => handleEdit(transaction)}>
                                         <FilePenLine className="w-5 h-5" />
                                     </Button>
                                     <ButtonDelete transacion={transaction} />

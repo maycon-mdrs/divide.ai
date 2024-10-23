@@ -68,7 +68,7 @@ export async function createTransacion(transacion: ITransacion): Promise<ITransa
 export async function updateTransacion(transacion: ITransacion): Promise<ITransacion | null> {
   try {
     const token = getUserLocalStorage()?.token;
-    const response = await api.put<ApiResponse<ITransacion>>(`//user-transactions/${transacion.id}`, transacion, {
+    const response = await api.put<ApiResponse<ITransacion>>(`/user-transactions/${transacion.id}`, transacion, {
       headers: { 'Authorization': `Bearer ${token}`, }
     });
 
