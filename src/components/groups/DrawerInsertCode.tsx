@@ -9,68 +9,77 @@ import {
     DrawerDescription,
     DrawerTitle
 } from "@/components/ui/drawer";
-import { Form } from "antd";
+import { Form, message } from "antd";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { DropdownMenu, DropdownMenuLabel, DropdownMenuItem, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { EllipsisVertical } from "lucide-react";  
+import { useJoinGroup } from "@/hooks/group/groupHook";
+import { getUserLocalStorage } from "@/context/AuthProvider/util";
+import { IJoinGroup } from "@/interfaces/IGroup";
+
 
 export function DrawerInsertCode() {
     const [isOpen, setIsOpen] = useState(false);
     const [form] = Form.useForm();
+    const { mutate } = useJoinGroup(); 
+    const userId = getUserLocalStorage()?.id;
 
     const handleClose = () => {
         setIsOpen(false);
+        form.resetFields();
     };
 
     const handleInsertGroupCode = (values: any) => {
-        
+        if (userId) {
+            const payload: IJoinGroup = {
+                code: values.code,
+                userId: userId,
+            };
+            mutate(payload, {
+                onSuccess: () => {
+                    setIsOpen(false); 
+                    form.resetFields();
+                    message.success('Você entrou no grupo com sucesso!');
+                },
+                onError: (error: any) => {
+                    message.error(error.message);
+                }
+            });
+        }
     };
-
     return (
         <Drawer open={isOpen} onOpenChange={setIsOpen} onClose={handleClose}>
-        <DrawerTrigger asChild>
-            {/*<DropdownMenu>
-                <DropdownMenuTrigger asChild> 
-                    <EllipsisVertical /> 
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56 mt-2">
-                    <DropdownMenuLabel>Entrar em grupo</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onSelect={() => setIsOpen(true)}>Inserir código</DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>*/}
-            <Button variant="link">Entrar em grupo</Button>
-        </DrawerTrigger>
-        <DrawerContent>
-            <div className="mx-auto w-full max-w-lg">
-                <DrawerHeader>
-
-                <DrawerTitle>Entrar em um grupo</DrawerTitle>
-                <DrawerDescription>
-                    Forneça o código do grupo e aproveite!
-                </DrawerDescription>
-                <Form 
-                    form={form}
-                    name="create-group-form"
-                    onFinish={handleInsertGroupCode}>
-
-                    <Label htmlFor="code" className="font-medium">Código</Label>
-                    <Form.Item
-                        name="code"
-                        className="text-primary m-0 mt-2"
-                        rules={[{ required: true, message: 'Por favor, insira o código do grupo!' }]}
+            <DrawerTrigger asChild>
+                <Button variant="link">Entrar em grupo</Button>
+            </DrawerTrigger>
+            <DrawerContent>
+                <div className="mx-auto w-full max-w-lg">
+                    <DrawerHeader>
+                        <DrawerTitle>Entrar em um grupo</DrawerTitle>
+                        <DrawerDescription>
+                            Forneça o código do grupo e aproveite!
+                        </DrawerDescription>
+                        <Form 
+                            form={form}
+                            name="join-group-form"
+                            onFinish={handleInsertGroupCode}
+                            initialValues={{ code: '' }}
                         >
-                        <Input id="code" />
-                    </Form.Item>
+                            <Label htmlFor="code" className="font-medium">Código</Label>
+                            <Form.Item
+                                name="code"
+                                className="text-primary m-0 mt-2"
+                                rules={[{ required: true, message: 'Por favor, insira o código do grupo!' }]}
+                            >
+                                <Input id="code" />
+                            </Form.Item>
 
-                    <Button variant="divideDark" type="submit" className="w-full mt-4">
-                        Inserir
-                    </Button>
-                </Form>
-                </DrawerHeader>
-            </div>
-        </DrawerContent>
+                            <Button variant="divideDark" type="submit" className="w-full mt-4">
+                                Inserir
+                            </Button>
+                        </Form>
+                    </DrawerHeader>
+                </div>
+            </DrawerContent>
         </Drawer>
     );
 }

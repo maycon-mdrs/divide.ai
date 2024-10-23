@@ -27,6 +27,7 @@ export const initializeAxios = (onUnauthorized: { (): void; (): void; }) => {
         }
       }
       console.log(error);
+      return Promise.reject(error);
     }
   );
 };

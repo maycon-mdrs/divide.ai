@@ -42,8 +42,11 @@ export function DrawerCategory({ initialCategory, isOpen, onClose }: DrawerCateg
   };
 
   return (
-    <Drawer open={isOpen} onOpenChange={onClose} onClose={onClose}>
-      <DrawerContent>
+    <Drawer 
+      open={isOpen} 
+      onOpenChange={onClose} 
+      onClose={onClose}>
+      <DrawerContent onClick={(e) => e.stopPropagation()}>
         <div className="mx-auto w-full max-w-lg flex flex-col justify-center">
           <DrawerHeader>
             <DrawerTitle>Editar Categoria</DrawerTitle>

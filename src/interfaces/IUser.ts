@@ -18,8 +18,10 @@ export interface IUserRegister {
     phoneNumber: string;
 }
 
-export interface IUserCard {
+export interface IUserResponse {
     id: number;
     firstName: string;
     lastName: string;
+    email: string;
+    phoneNumber: string;
 }
