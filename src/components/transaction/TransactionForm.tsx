@@ -40,7 +40,7 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
   const [categoryId, setCategoryId] = useState<number>(initialData?.categoryId || 0);
   const [isPaid, setIsPaid] = useState<boolean>(initialData?.paidAt ? true : false);
   const [categoryOutflow, setCategoryOutflow] = useState<boolean | number | undefined>(data?.find(category => category.id === initialData?.categoryId)?.expense);
-  const [toggleGroup, setToggleGroup] = useState<string | null>(data?.find(category => category.id === initialData?.categoryId)?.expense ? 'inflow' : 'outflow');
+  const [toggleGroup, setToggleGroup] = useState<string | null>(initialData?.categoryId ? data?.find(category => category.id === initialData?.categoryId)?.expense ? 'inflow' : 'outflow' : null);
   console.log("teste: ", data?.find(category => category.id === initialData?.categoryId)?.name || undefined);
   useEffect(() => {
     if (initialData) {
@@ -220,7 +220,7 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
         </ToggleGroup>
       </Form.Item>
 
-      {toggleGroup && (
+      {toggleGroup != null && (
         <>
           <Label htmlFor="category" className="font-medium">Categoria</Label>
           <Form.Item
