@@ -43,7 +43,7 @@ export function TabGroup({ group }: TabGroupProps) {
     return (
       <Tabs defaultValue="expenses">
       <TabsList
-        className="grid w-full sm:w-[400px] md:w-[500px] lg:w-[600px] grid-cols-2 h-[40px] sm:h-[50px] bg-divide text-secondary-foreground border-border"
+        className="grid w-full sm:w-[400px] md:w-[500px] lg:w-[600px] grid-cols-2 h-[40px] bg-divide text-secondary-foreground border-border"
       >
         <TabsTrigger
           value="expenses"
