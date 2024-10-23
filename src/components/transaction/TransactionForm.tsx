@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Form } from "antd";
+import { cn } from "@/lib/utils";
+import { ptBR } from 'date-fns/locale';
+import { format } from "date-fns";
+
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LoadingOutlined } from '@ant-design/icons';
 import { ICategory } from "@/interfaces/ICategory";
-import { MinusIcon, PlusIcon } from "@radix-ui/react-icons";
+import { MinusIcon, PlusIcon, CalendarIcon } from "@radix-ui/react-icons";
+
 import { IoArrowUpCircleOutline, IoArrowDownCircleOutline } from "react-icons/io5";
 import { useAuth } from "@/context/AuthProvider/useAuth";
 import { useCategoryDataByUser } from "@/hooks/category/categoryHook";
@@ -24,6 +29,12 @@ import {
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { ITransacion, ITransacionResponse } from "@/interfaces/ITransacion";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
 
 interface TransacionFormProps {
   initialData?: ITransacion | ITransacionResponse | null;
@@ -32,9 +43,18 @@ interface TransacionFormProps {
 }
 
 export function TransactionForm({ initialData, onSubmit, isLoading }: TransacionFormProps) {
+  const [date, setDate] = useState<Date>();
+  const [isOpen, setIsOpen] = useState(false);
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const formattedDate = date ? format(date, "PPP", { locale: ptBR }) : "Escolha uma data";
+
   const [form] = Form.useForm();
   const { data } = useCategoryDataByUser(); // data com todas as categorias do user logado
   const auth = useAuth();
+  
+  
+ 
+
 
   const [money, setMoney] = useState<number>(initialData?.amount || 0);
   const [categoryId, setCategoryId] = useState<number>(initialData?.categoryId || 0);
@@ -54,14 +74,23 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
 
       const toggleValue = categoryOutflow ? 'outflow' : 'inflow';
       setToggleGroup(toggleValue);
-
+      if (initialData.paidAt) {
+        const paidAtDate = new Date(initialData.paidAt);
+        setDate(paidAtDate); // Atualiza o estado `date`
+        form.setFieldsValue({ data_paid: paidAtDate }); // Define o valor inicial no formulário
+      }
+      //setDate(initialData.paidAt!);
+      //console.log("data vem assim: ", initialData.paidAt);
+      
       form.setFieldsValue({
         id: initialData.id,
         description: initialData.description,
         value: initialData.amount,
         categoryId: data?.find(category => category.id === categoryId)?.name,
-        paidAt: categoryOutflow ? new Date() : null,
+        paidAt: categoryOutflow ? initialData.paidAt : null,
         toggleGroup: toggleValue,
+        data_paid: initialData.paidAt,
+        
       });
     }
   }, [initialData, form]);
@@ -72,7 +101,7 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
       amount: money,
       categoryId: categoryId,
       userId: Number(auth.id!),
-      paidAt: categoryOutflow && isPaid ? new Date() : null,
+      paidAt: categoryOutflow && isPaid ? date : null,
     };
     onSubmit(data);
   };
@@ -91,7 +120,10 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
       }
     }
   };
-
+  const handleClose = () => {
+    setDate(undefined);
+    setIsOpen(false);
+  };
   function onClick(adjustment: number) {
     let newMoney = parseFloat((money + adjustment).toFixed(2));
     if (newMoney < 0) {
@@ -275,6 +307,47 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
               <Label htmlFor="airplane-mode">{isPaid ? "Sim, foi paga." : "Não foi pago."}</Label>
             </div>
           </Form.Item>
+          
+        </>
+      )}
+
+      {isPaid && (
+        <>
+          <Label htmlFor="data_paid" className="font-medium">Informe a data de pagamento</Label>
+          <Form.Item
+            name="data_paid"
+            className="mt-1 mb-2"
+          >
+            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-auto justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {formattedDate}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onDayClick={
+                      (day) => {
+                        setDate(day)
+                        setCalendarOpen(false)
+                      }
+                    }
+                    locale={ptBR}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+          </Form.Item>
+          
         </>
       )}
 
