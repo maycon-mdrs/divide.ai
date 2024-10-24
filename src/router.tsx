@@ -1,14 +1,16 @@
+import { useEffect } from "react";
 import { createBrowserRouter, Navigate, useNavigate } from "react-router-dom";
-import { HomePage } from "@/pages/home/HomePage";
-import { LoginPage } from "@/pages/login/LoginPage";
 import MainLayout from "@/pages/layouts/MainLayout";
+import { HomePage } from "@/pages/home/HomePage";import { LoginPage } from "@/pages/login/LoginPage";
+
 import { RegisterPage } from "@/pages/login/RegisterPage";
 import { CategoryPage } from "@/pages/category/CategoryPage";
+import { Groups } from "@/pages/groups/Groups";
+import { GroupDetails } from "@/pages/groups/GroupDetails";
+import { PredictionPage } from "@/pages/AI/PredictionPage";
+
 import { PrivateRoutes } from "./pages/PrivateRoutes";
-import { Groups } from "./pages/groups/Groups";
-import { useEffect } from "react";
-import { initializeAxios } from "./services/api";
-import { GroupDetails } from "./pages/groups/GroupDetails";
+import { initializeAxios } from "@/services/api";
 
 function Element({ children }: { children: JSX.Element }) {  
   const navigate = useNavigate();
@@ -36,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: "/dashboard",
         element: <Element children={<HomePage />} />,
+      },
+      {
+        path: "/previsao-ia",
+        element: <Element children={<PredictionPage />} />,
       },
       {
         path: "/grupos",
