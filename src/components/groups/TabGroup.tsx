@@ -62,7 +62,7 @@ export function TabGroup({ group }: TabGroupProps) {
         <TabsContent value="expenses" className="w-full">
           <Card>
             <CardHeader>
-              <CardTitle>Despesas</CardTitle>
+              <CardTitle className="pl-5">Despesas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               <ListTransaction groupId={group.id} />

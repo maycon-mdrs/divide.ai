@@ -20,3 +20,7 @@ export const formatDate = (date: string | Date) => {
     return "";
   }
 }
+
+export const truncateText = (Text: string, maxLength: number) => {
+  return Text.length > maxLength ? Text.substring(0, maxLength) + "..." : Text;
+};

@@ -10,12 +10,6 @@ import { Navigate, Outlet, useNavigate } from "react-router-dom";
  */
 export function PrivateRoutes() {
 	const auth = useAuth();
-	const navigate = useNavigate();
-
-  useEffect(() => {
-    // Initialize Axios with a callback function to redirect
-    initializeAxios(() => navigate('/login'));
-  }, [navigate]);
 
 	return auth.token ? <Outlet /> : <Navigate to='/login' />;
 }
