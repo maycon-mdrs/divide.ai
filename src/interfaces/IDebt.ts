@@ -1,10 +1,9 @@
-import { IUser } from "./IUser";
+import { IUserResponse } from "./IUser";
 
-export interface IDebt  {
+export interface IDebt{
     id?: number;
     amount: number;
-    user: IUser;
-    paidAt?: Date | null;
+    user: IUserResponse;
+    createdAt?: Date;
+    paidAt: Date;
 };
-
-
