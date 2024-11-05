@@ -27,11 +27,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Trash2 } from "lucide-react"
+import { Plus, PlusCircle, Trash2 } from "lucide-react"
 import { getUserLocalStorage } from "@/context/AuthProvider/util"
 import { message } from "antd"
 import { generateColor } from "./listGroup/GroupAvatars"
 import { ListTransaction } from "./transactions/ListTransactions"
+import { StepsCreate } from "./group-transaction/StepsCreate"
 
 interface TabGroupProps {
     group: IGroup;
@@ -39,7 +40,16 @@ interface TabGroupProps {
   
 export function TabGroup({ group }: TabGroupProps) {
     const currentUserId  = Number(getUserLocalStorage()?.id); 
-  
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleClose = () => {
+      setIsDialogOpen(false);
+    };  
+
+    const handleOpen = () => {
+      setIsDialogOpen(true);
+    }; 
+
     return (
       <Tabs defaultValue="expenses">
       <TabsList
@@ -61,8 +71,18 @@ export function TabGroup({ group }: TabGroupProps) {
   
         <TabsContent value="expenses" className="w-full">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex-row justify-between">
               <CardTitle>Despesas</CardTitle>
+              <Button
+                variant="outline"
+                size="icon"
+                className="h-8 w-8 shrink-0 rounded-full"
+                type="button"
+                onClick={handleOpen}
+              >
+                <Plus className="h-4 w-4" />
+                <span className="sr-only">+</span>
+          </Button>
             </CardHeader>
             <CardContent className="space-y-2">
               <ListTransaction groupId={group.id} />
@@ -105,6 +125,18 @@ export function TabGroup({ group }: TabGroupProps) {
             </CardContent>
           </Card>
         </TabsContent>
+
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogContent className="w-[90vw] max-w-lg md:max-w-2xl lg:max-w-3xl h-[50vh] overflow-y-auto">
+              <DialogHeader>
+                  <DialogTitle>Nova Despesa</DialogTitle>
+                  <DialogDescription>Preencha as etapas para criar uma nova despesa.</DialogDescription>
+              </DialogHeader>
+              <StepsCreate group={group} />
+    
+          </DialogContent>
+      </Dialog>
+
       </Tabs>
     );
   }
