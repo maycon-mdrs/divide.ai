@@ -134,7 +134,7 @@ export function CategoryForm({ initialData, onSubmit, isLoading }: CategoryFormP
         </div>
       </Form.Item>
 
-      <Button type="submit" className="w-full mt-4 bg-[#29756F] hover:bg-[#29756F] text-white" disabled={isLoading}>
+      <Button type="submit" variant="divideDark" className="w-full mt-4" disabled={isLoading}>
         {isLoading ? <LoadingOutlined spin /> : 'Salvar'}
       </Button>
     </Form>

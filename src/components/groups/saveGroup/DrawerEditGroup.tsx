@@ -1,13 +1,12 @@
 import {
-    Drawer,
-    DrawerContent,
-    DrawerDescription,
-    DrawerHeader,
-    DrawerTitle,
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
 } from "@/components/ui/drawer";
 import { IGroup, IGroupForm } from "@/interfaces/IGroup";
 import { message } from "antd";
-import { useState } from "react";
 import { GroupForm } from "./GroupForm";
 import { useGroupUpdate } from "@/hooks/group/groupHook";
 
@@ -25,7 +24,7 @@ export function DrawerEditGroup({ isOpen, onClose, initialGroup }: DrawerEditGro
       id: group.id,
       name: group.name,
       description: group.description,
-      createdBy: group.createdBy?.id, 
+      createdBy: group.createdBy?.id,
     };
   };
 
@@ -52,7 +51,7 @@ export function DrawerEditGroup({ isOpen, onClose, initialGroup }: DrawerEditGro
             <DrawerTitle>Editar Grupo</DrawerTitle>
             <DrawerDescription>Atualize as informações do grupo abaixo.</DrawerDescription>
             <GroupForm
-              initialData={mapInitialGroupToFormValues(initialGroup)} 
+              initialData={mapInitialGroupToFormValues(initialGroup)}
               onSubmit={handleGroupSave}
               isLoading={isPending}
             />
