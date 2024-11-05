@@ -7,6 +7,7 @@ import { CategoryPage } from "@/pages/category/CategoryPage";
 import { TransacionPage } from "@/pages/transacion/TransacionPage";
 import { PrivateRoutes } from "./pages/PrivateRoutes";
 import { Groups } from "./pages/groups/Groups";
+import { GroupTransactionDetails } from "@/pages/groups/GroupTransactionDetails";
 import { useEffect } from "react";
 import { initializeAxios } from "./services/api";
 import { GroupDetails } from "./pages/groups/GroupDetails";
@@ -53,6 +54,10 @@ export const router = createBrowserRouter([
       {
         path: "/transacoes",
         element: <Element children={<TransacionPage />} />
+      },
+      {
+        path: "/details/:id",
+        element: <Element children={<GroupTransactionDetails />} />
       }
 
     ],
