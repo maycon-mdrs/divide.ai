@@ -5,5 +5,5 @@ export interface IDebt{
     amount: number;
     user: IUserResponse;
     createdAt?: Date;
-    paidAt: Date;
+    paidAt?: Date;
 };
