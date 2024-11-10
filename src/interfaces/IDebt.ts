@@ -7,3 +7,11 @@ export interface IDebt{
     createdAt?: Date;
     paidAt?: Date;
 };
+
+export interface IDebtRequest {
+    id?: number;
+    amount: number;
+    userId: number;
+    paidAt?: Date;
+};
+

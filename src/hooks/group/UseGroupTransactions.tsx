@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getAllGroupTransactions } from "@/services/GroupTransactionsService";
+import { createGroupTransaction, getAllGroupTransactions } from "@/services/GroupTransactionsService";
 
 export function useGroupTransactions(groupId: number) {
   if(!groupId) throw new Error("groupId is required");
@@ -10,4 +10,17 @@ export function useGroupTransactions(groupId: number) {
   });
 
   return query;
+}
+
+
+export function useGroupTransactionMutate() {
+  const queryClient = useQueryClient();
+  const mutate = useMutation({
+      mutationFn:  createGroupTransaction,
+      onSuccess: () => {  
+          queryClient.invalidateQueries({ queryKey: ['group-transactions'] });
+      }
+  });
+
+  return mutate;
 }

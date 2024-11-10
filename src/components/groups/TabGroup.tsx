@@ -32,7 +32,7 @@ import { getUserLocalStorage } from "@/context/AuthProvider/util"
 import { message } from "antd"
 import { generateColor } from "./listGroup/GroupAvatars"
 import { ListTransaction } from "./transactions/ListTransactions"
-import { StepsCreate } from "./group-transaction/StepsCreate"
+import { SaveModal } from "./group-transaction/SaveModal"
 
 interface TabGroupProps {
     group: IGroup;
@@ -74,14 +74,10 @@ export function TabGroup({ group }: TabGroupProps) {
             <CardHeader className="flex-row justify-between">
               <CardTitle>Despesas</CardTitle>
               <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 shrink-0 rounded-full"
-                type="button"
+                variant="divideActive"
                 onClick={handleOpen}
               >
-                <Plus className="h-4 w-4" />
-                <span className="sr-only">+</span>
+                Nova despesa
           </Button>
             </CardHeader>
             <CardContent className="space-y-2">
@@ -126,16 +122,13 @@ export function TabGroup({ group }: TabGroupProps) {
           </Card>
         </TabsContent>
 
-        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className="w-[90vw] max-w-lg md:max-w-2xl lg:max-w-3xl h-[50vh] overflow-y-auto">
-              <DialogHeader>
-                  <DialogTitle>Nova Despesa</DialogTitle>
-                  <DialogDescription>Preencha as etapas para criar uma nova despesa.</DialogDescription>
-              </DialogHeader>
-              <StepsCreate group={group} />
-    
-          </DialogContent>
-      </Dialog>
+        {isDialogOpen && (
+        <SaveModal
+          isOpen={isDialogOpen}
+          onClose={handleClose}
+          groupId={group.id}
+        />
+      )}
 
       </Tabs>
     );
