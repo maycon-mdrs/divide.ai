@@ -11,7 +11,7 @@ export interface IDebt{
 export interface IDebtRequest {
     id?: number;
     amount: number;
-    userId: number;
+    userId?: number;
     paidAt?: Date;
 };
 

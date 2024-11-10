@@ -7,12 +7,14 @@ import { EllipsisVertical } from "lucide-react";
 import { useAuth } from "@/context/AuthProvider/useAuth";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
 import { message } from "antd";
+import { useState } from "react";
+import { EditModal } from "../group-transaction/EditModal";
 
 export function ListTransaction({ groupId }: { groupId: number }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedTransactionId, setSelectedTransactionId] = useState<number | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   const { data } = useGroupTransactions(groupId);
   const { mutate: deleteTransacion } = useGroupTransactionDelete(groupId);
@@ -29,6 +31,11 @@ export function ListTransaction({ groupId }: { groupId: number }) {
         message.error(error.message);
       }
     });
+  }
+
+  const handleEditTransaction = (transactionId: number) => {
+    setSelectedTransactionId(transactionId);
+    setIsEditDialogOpen(true);
   };
 
   return (
@@ -55,6 +62,9 @@ export function ListTransaction({ groupId }: { groupId: number }) {
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-40">
+                    <DropdownMenuItem onClick={() => handleEditTransaction(transaction.id)}>
+                      Editar
+                    </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => {
                       setSelectedTransactionId(transaction.id); // Set the selected transaction ID
                       setIsDialogOpen(true); // Open the dialog
@@ -91,6 +101,15 @@ export function ListTransaction({ groupId }: { groupId: number }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+          
+
+      {isEditDialogOpen && (
+        <EditModal
+          groupTransactionId={selectedTransactionId!}
+          isOpen={isEditDialogOpen}
+          onClose={() => setIsEditDialogOpen(false)}
+        />
+      )}
     </>
   );
 }

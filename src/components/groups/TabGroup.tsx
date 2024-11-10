@@ -31,8 +31,8 @@ import { Plus, PlusCircle, Trash2 } from "lucide-react"
 import { getUserLocalStorage } from "@/context/AuthProvider/util"
 import { message } from "antd"
 import { generateColor } from "./listGroup/GroupAvatars"
-import { ListTransaction } from "./transactions/ListTransactions"
 import { SaveModal } from "./group-transaction/SaveModal"
+import { ListTransaction } from "./transactions/ListTransactions"
 
 interface TabGroupProps {
     group: IGroup;
