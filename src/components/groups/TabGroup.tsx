@@ -71,7 +71,7 @@ export function TabGroup({ group }: TabGroupProps) {
   
         <TabsContent value="expenses" className="w-full">
           <Card>
-            <CardHeader className="flex-row justify-between">
+            <CardHeader className="flex-row justify-between items-center px-10">
               <CardTitle>Despesas</CardTitle>
               <Button
                 variant="divideActive"

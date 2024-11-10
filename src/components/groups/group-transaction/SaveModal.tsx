@@ -123,17 +123,20 @@ export function SaveModal({isOpen, onClose, groupId}: SaveModelProps) {
     return true;
   };
 
+  const totalMemberAmount = Object.values(memberAmounts).reduce((acc, value) => acc + value, 0);
+  const isAmountValid = totalMemberAmount === formData.amount;
+
   return (
 
     <Dialog open={isOpen} onOpenChange={onClose}>
-    <DialogContent className="max-w-md sm:max-w-lg md:max-w-xl lg:max-w-2xl h-[45vh] overflow-y-auto">
+    <DialogContent className="overflow-y-auto">
       <DialogHeader>
           <DialogTitle>Nova Despesa</DialogTitle>
           <DialogDescription>Preencha as etapas para criar uma nova despesa.</DialogDescription>
       </DialogHeader>
         {currentStep === 1 && <StepOne formData = {formData} setFormData = {setFormData} />}
         {currentStep === 2 && <StepTwo members = {members} selectedMembers= {selectedMembers} onMembersChange = {handleMembersChange} />}
-        {currentStep === 3 && <StepThree selectedMembers={selectedMembers} memberAmounts={memberAmounts} onAmountChange={handleAmountChange} /> }
+        {currentStep === 3 && <StepThree selectedMembers={selectedMembers} memberAmounts={memberAmounts} onAmountChange={handleAmountChange} amount={formData.amount} /> }
       <DialogFooter>
         
         {currentStep > 1 ? (
@@ -163,7 +166,7 @@ export function SaveModal({isOpen, onClose, groupId}: SaveModelProps) {
                     isPending || 
                     (currentStep === 1 && (!formData.amount || !formData.description)) ||
                     (currentStep === 2 && selectedMembers.length === 0) ||
-                    (currentStep === 3 && selectedMembers.some(member => !memberAmounts[member.id]))
+                    (currentStep === 3 && !isAmountValid)
                   }
           >
             {isPending ? <LoadingOutlined spin /> : 'Salvar'}

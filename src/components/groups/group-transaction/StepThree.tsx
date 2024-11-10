@@ -1,24 +1,26 @@
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card";
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { IUserResponse } from "@/interfaces/IUser";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { generateColor } from "../listGroup/GroupAvatars";
-import { formatInitialName } from "@/utils/Formatter";
+import { formatInitialName, formatMoney } from "@/utils/Formatter";
 
 interface StepThreeProps {
+  amount: number;
   selectedMembers: IUserResponse[];
   memberAmounts: { [key: number]: number };
   onAmountChange: (memberId: number, amount: number) => void;
 }
 
-export function StepThree({ selectedMembers, memberAmounts, onAmountChange }: StepThreeProps) {
+export function StepThree({ amount, selectedMembers, memberAmounts, onAmountChange }: StepThreeProps) {
 
   const handleAmountChange = (memberId: number, value: string) => {
     const amount = parseFloat(value);
@@ -27,9 +29,12 @@ export function StepThree({ selectedMembers, memberAmounts, onAmountChange }: St
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Definir Valores</CardTitle>
-        <CardDescription>Atribua o valor para cada membro selecionado</CardDescription>
+      <CardHeader className="flex flex-row justify-between">
+        <div>
+          <CardTitle>Definir Valores</CardTitle>
+          <CardDescription>Atribua o valor para cada membro selecionado</CardDescription>
+        </div>
+        {/* <small className="text-sm font-medium leading-none">{formatMoney(amount)}</small> */}
       </CardHeader>
       <CardContent className="space-y-4">
         <ul className="space-y-4">
@@ -56,7 +61,7 @@ export function StepThree({ selectedMembers, memberAmounts, onAmountChange }: St
                 <Input
                   type="number"
                   id={`amount-${member.id}`}
-                  value={memberAmounts[member.id] || ''} 
+                  value={memberAmounts[member.id] || ''}
                   onChange={(e) => handleAmountChange(member.id, e.target.value)}
                   min="0"
                   step="0.01"
@@ -67,6 +72,16 @@ export function StepThree({ selectedMembers, memberAmounts, onAmountChange }: St
           ))}
         </ul>
       </CardContent>
+      <CardFooter className="flex flex-col justify-center">
+        <small className="text-sm font-medium leading-none text-center">
+          {formatMoney(Object.values(memberAmounts).reduce((acc, value) => acc + value, 0))} de {formatMoney(amount)}
+        </small>
+        <p className="text-sm text-muted-foreground">
+          {Object.values(memberAmounts).reduce((acc, value) => acc + value, 0) > amount
+            ? `Passou ${formatMoney(Object.values(memberAmounts).reduce((acc, value) => acc + value, 0) - amount)}`
+            : `Restam ${formatMoney(amount - Object.values(memberAmounts).reduce((acc, value) => acc + value, 0))}`}
+        </p>
+      </CardFooter>
     </Card>
   );
 }
