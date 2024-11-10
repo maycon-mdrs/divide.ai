@@ -44,17 +44,12 @@ interface TransacionFormProps {
 
 export function TransactionForm({ initialData, onSubmit, isLoading }: TransacionFormProps) {
   const [date, setDate] = useState<Date>();
-  const [isOpen, setIsOpen] = useState(false);
   const [calendarOpen, setCalendarOpen] = useState(false);
   const formattedDate = date ? format(date, "PPP", { locale: ptBR }) : "Escolha uma data";
 
   const [form] = Form.useForm();
   const { data } = useCategoryDataByUser(); // data com todas as categorias do user logado
   const auth = useAuth();
-  
-  
- 
-
 
   const [money, setMoney] = useState<number>(initialData?.amount || 0);
   const [categoryId, setCategoryId] = useState<number>(initialData?.categoryId || 0);
@@ -65,7 +60,6 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
   useEffect(() => {
     if (initialData) {
 
-      console.log("data no inicio: ", initialData);
       const positiveAmount = Math.abs(initialData.amount);
       const categoryOutflow = data?.find(category => category.id === initialData?.categoryId)?.expense;
       setMoney(positiveAmount);
@@ -81,7 +75,7 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
       }
       //setDate(initialData.paidAt!);
       //console.log("data vem assim: ", initialData.paidAt);
-      
+
       form.setFieldsValue({
         id: initialData.id,
         description: initialData.description,
@@ -90,7 +84,7 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
         paidAt: categoryOutflow ? initialData.paidAt : null,
         toggleGroup: toggleValue,
         data_paid: initialData.paidAt,
-        
+
       });
     }
   }, [initialData, form]);
@@ -120,10 +114,7 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
       }
     }
   };
-  const handleClose = () => {
-    setDate(undefined);
-    setIsOpen(false);
-  };
+
   function onClick(adjustment: number) {
     let newMoney = parseFloat((money + adjustment).toFixed(2));
     if (newMoney < 0) {
@@ -173,9 +164,21 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
       <Form.Item
         name="value"
         className="text-primary m-0 mt-1 mb-2"
-        rules={[{ required: true, message: 'Por favor, insira um valor!' }]}
+        rules={[
+          {
+            required: true,
+            validator: async (_, value) => {
+              if (!value || isNaN(value)) {
+                return Promise.reject(new Error('Por favor, inserir um valor maior que 0!'));
+              }
+              if (value <= 0) {
+                return Promise.reject(new Error('O valor deve ser maior que 0!'));
+              }
+            },
+          }
+        ]}
       >
-        <div className="flex items-center justify-center space-x-2 mt-5 text-primary">
+        <div className="flex items-center justify-center space-x-2 text-primary">
           <Button
             variant="outline"
             size="icon"
@@ -296,59 +299,58 @@ export function TransactionForm({ initialData, onSubmit, isLoading }: Transacion
       )}
 
       {toggleGroup === "outflow" && (
-        <>
-          <Label htmlFor="isPaid" className="font-medium">Essa transação foi paga?</Label>
-          <Form.Item
-            name="isPaid"
-            className="mt-1 mb-2"
-          >
-            <div className="flex items-center space-x-2">
-              <Switch id="airplane-mode bg-[#29756f]" checked={isPaid ? true : false} onCheckedChange={handleSwitchChange} />
-              <Label htmlFor="airplane-mode">{isPaid ? "Sim, foi paga." : "Não foi pago."}</Label>
-            </div>
-          </Form.Item>
-          
-        </>
-      )}
-
-      {isPaid && (
-        <>
-          <Label htmlFor="data_paid" className="font-medium">Informe a data de pagamento</Label>
-          <Form.Item
-            name="data_paid"
-            className="mt-1 mb-2"
-          >
-            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-auto justify-start text-left font-normal",
-                      !date && "text-muted-foreground"
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formattedDate}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={date}
-                    onDayClick={
-                      (day) => {
-                        setDate(day)
-                        setCalendarOpen(false)
+        <div className='flex justify-between'>
+          <div>
+            <Label htmlFor="isPaid" className="font-medium">Essa transação foi paga?</Label>
+            <Form.Item
+              name="isPaid"
+              className="mt-1 mb-2"
+            >
+              <div className="flex items-center space-x-2">
+                <Switch id="airplane-mode bg-[#29756f]" checked={isPaid ? true : false} onCheckedChange={handleSwitchChange} />
+                <Label htmlFor="airplane-mode">{isPaid ? "Sim, foi paga." : "Não foi pago."}</Label>
+              </div>
+            </Form.Item>
+          </div>
+          {isPaid && (
+            <div>
+              <Label htmlFor="data_paid" className="font-medium">Informe a data de pagamento</Label>
+              <Form.Item
+                name="data_paid"
+                className="mt-1 mb-2"
+              >
+                <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-auto justify-start text-left font-normal",
+                        !date && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {formattedDate}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={date}
+                      onDayClick={
+                        (day) => {
+                          setDate(day)
+                          setCalendarOpen(false)
+                        }
                       }
-                    }
-                    locale={ptBR}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-          </Form.Item>
-          
-        </>
+                      locale={ptBR}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </Form.Item>
+            </div>
+          )}
+        </div>
       )}
 
       <Button type="submit" className="w-full mt-4 bg-[#29756F] hover:bg-[#29756F] text-white" disabled={isLoading}>
