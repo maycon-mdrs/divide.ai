@@ -1,6 +1,7 @@
 import { api } from '@/services/api';
-import { ICategory, ApiResponse } from '@/interfaces/ICategory';
+import { ICategory } from '@/interfaces/ICategory';
 import { getUserLocalStorage } from '@/context/AuthProvider/util';
+import { ErrorResponse, ApiResponse } from '@/interfaces/IResponse';
 
 export async function getAllCategories(): Promise<ICategory[] | null> {
   try {
@@ -42,9 +43,14 @@ export async function getCategoryById(id: number): Promise<ICategory | null> {
 
     if (response.data.success) return response.data.data;
     return null;
-  } catch (error) {
-    console.error(error);
-    return null;
+  } catch (error: any) {
+    const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
+
+    if (errorResponse && errorResponse.error?.message) {
+      throw new Error(errorResponse.error?.message);
+    } else {
+      throw new Error('Erro desconhecido ao retornar categoria pelo id');
+    }
   }
 }
 
@@ -58,9 +64,14 @@ export async function createCategory(category: ICategory): Promise<ICategory | n
 
     if (response.data.success) return response.data.data;
     return null;
-  } catch (error) {
-    console.error(error);
-    return null;
+  } catch (error: any) {
+    const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
+
+    if (errorResponse && errorResponse.error?.message) {
+      throw new Error(errorResponse.error?.message);
+    } else {
+      throw new Error('Erro desconhecido ao criar categoria');
+    }
   }
 }
 
@@ -73,24 +84,34 @@ export async function updateCategory(category: ICategory): Promise<ICategory | n
 
     if (response.data.success) return response.data.data;
     return null;
-  } catch (error) {
-    console.error(error);
-    return null;
-  }
-}
+  } catch (error: any) {
+    const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
 
-export async function deleteCategory(id: number): Promise<void | null> {
-  try {
-    const token = getUserLocalStorage()?.token;
-    const response = await api.delete<ApiResponse<null>>(`/categories/${id}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    });
-
-    if (!response.data.success) {
-      throw new Error('Failed to delete category');
+    if (errorResponse && errorResponse.error?.message) {
+      throw new Error(errorResponse.error?.message);
+    } else {
+      throw new Error('Erro desconhecido ao editar categoria');
     }
-  } catch (error) {
-    console.error(error);
-    return null;
   }
 }
+
+  export async function deleteCategory(id: number): Promise<void | null> {
+    try {
+      const token = getUserLocalStorage()?.token;
+      const response = await api.delete<ApiResponse<null>>(`/categories/${id}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!response.data.success) {
+        throw new Error('Erro ao deletar categoria');
+      }
+    } catch (error: any) {
+      const errorResponse = error?.response?.data as ApiResponse<ErrorResponse>;
+  
+      if (errorResponse && errorResponse.error?.message) {
+        throw new Error(errorResponse.error?.message);
+      } else {
+        throw new Error('Erro desconhecido ao deletar categoria');
+      }
+    }
+  }

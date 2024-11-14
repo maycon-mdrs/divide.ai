@@ -31,11 +31,11 @@ import { Trash2 } from "lucide-react"
 import { getUserLocalStorage } from "@/context/AuthProvider/util"
 import { message } from "antd"
 import { generateColor } from "./listGroup/GroupAvatars"
+import { ListTransaction } from "./transactions/ListTransactions"
 
 interface TabGroupProps {
     group: IGroup;
   }
-  
   
 export function TabGroup({ group }: TabGroupProps) {
     const currentUserId  = Number(getUserLocalStorage()?.id); 
@@ -65,6 +65,7 @@ export function TabGroup({ group }: TabGroupProps) {
               <CardTitle>Despesas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
+              <ListTransaction groupId={group.id} />
             </CardContent>
             <CardFooter>
             </CardFooter>
