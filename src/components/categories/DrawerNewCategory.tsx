@@ -23,22 +23,24 @@ export function DrawerNewCategory() {
   const handleClose = () => {
     setIsOpen(false);
 };
-const queryClient = useQueryClient();
 
 const handleCategorySave = (values: ICategory) => {
   setLoading(true);
   setTimeout(() => {
-    setIsDialogOpen(true);
-    message.success("Categoria criada com sucesso!");
+    setIsDialogOpen(true); 
     setLoading(false);
-    console.log("no envio da categoria: ", values);
-    
+
     createCategory(values, {
       onSuccess: () => {
+        message.success("Categoria criada com sucesso!");
+        setIsOpen(false);  
+        setIsDialogOpen(false); 
+      },
+      onError: (error: any) => {
+        message.error(`Erro ao criar categoria: ${error.message}`);
+        setIsDialogOpen(false); 
       }
     });
-    
-    setIsOpen(false);
   }, 500);
 };
 
