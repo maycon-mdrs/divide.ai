@@ -19,17 +19,27 @@ export function DrawerNewCategory() {
 
   const handleClose = () => {
     setIsOpen(false);
-  };
+};
 
-  const handleCategorySave = (values: ICategory) => {
-    try {
-      createCategory(values);
-      message.success("Categoria criada com sucesso!");
-      handleClose();
-    } catch (error) {
-      message.error("Erro ao criar categoria!");
-    }
-  };
+const handleCategorySave = (values: ICategory) => {
+  setLoading(true);
+  setTimeout(() => {
+    setIsDialogOpen(true); 
+    setLoading(false);
+
+    createCategory(values, {
+      onSuccess: () => {
+        message.success("Categoria criada com sucesso!");
+        setIsOpen(false);  
+        setIsDialogOpen(false); 
+      },
+      onError: (error: any) => {
+        message.error(`Erro ao criar categoria: ${error.message}`);
+        setIsDialogOpen(false); 
+      }
+    });
+  }, 500);
+};
 
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen} onClose={handleClose}>

@@ -1,7 +1,7 @@
 import { IUserResponse } from "./IUser";
 
 export interface IDebt{
-    id?: number;
+    id: number;
     amount: number;
     user: IUserResponse;
     createdAt?: Date;

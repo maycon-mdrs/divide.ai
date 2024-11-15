@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
     Table,
     TableBody,
@@ -7,8 +7,6 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
 import {
     Dialog,
     DialogContent,
@@ -21,8 +19,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash2, FilePenLine } from 'lucide-react';
 import { useTransactionDelete, useTransactionDataByUser } from "@/hooks/transacion/transacionHook";
-import { useCategoryDataByUser } from "@/hooks/category/categoryHook";
-import { ICategory } from '@/interfaces/ICategory';
 import { DrawerTransaction } from "./DrawerEditTransaction";
 import { ITransacion, ITransacionResponse } from "@/interfaces/ITransacion";
 
@@ -30,7 +26,6 @@ import { ITransacion, ITransacionResponse } from "@/interfaces/ITransacion";
 export function TableTransacion() {
     const { data } = useTransactionDataByUser();
 
-    const [isPaid, setIsPaid] = useState(false);
     const [selectedTransacion, setSelectedTransacion] = useState<ITransacionResponse | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -45,7 +40,7 @@ export function TableTransacion() {
           id: response.id,
           amount: response.amount,
           description: response.description,
-          categoryId: response.category?.id ?? response.category?.id ?? 0, // Assuming categoryId could be derived from category if it's available
+          categoryId: response.category?.id ?? response.category?.id ?? 0, 
           userId: response.userId,
           paidAt: response.paidAt,
         };
@@ -85,12 +80,17 @@ export function TableTransacion() {
                                     minimumFractionDigits: 2,
                                     maximumFractionDigits: 2,
                                 }).format(Math.abs(transaction.amount))}</p></TableCell>
-                            <TableCell>{transaction.paidAt == null && transaction.amount > 0
-                                ? <p className="w-fit bg-green-100 p-2 text-sm rounded text-green-950">Ganho</p>
-                                : transaction.paidAt !== null && transaction.amount < 0
-                                    ? <p className="w-fit bg-green-100 p-2 text-sm rounded text-green-950">Gasto</p>
-                                    : <p className="w-fit bg-red-100 p-2 text-sm rounded text-red-950">Dívida</p>
-                            }</TableCell>
+                            <TableCell>
+                            {transaction.paidAt == null && transaction.amount > 0 && (
+                                <p className="w-fit bg-green-100 p-2 text-sm rounded text-green-950">Ganho</p>
+                             )}
+                            {transaction.paidAt == null && transaction.amount < 0 && (
+                                <p className="w-fit bg-red-100 p-2 text-sm rounded text-red-950">Dívida</p>
+                             )}
+                            {transaction.paidAt != null && transaction.amount < 0 && (
+                                <p className="w-fit bg-green-100 p-2 text-sm rounded text-green-950">Gasto</p>
+                             )}
+                            </TableCell>
 
                             <TableCell>
                                 <div className="flex justify-center">

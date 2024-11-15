@@ -1,4 +1,4 @@
-import {getAllDebtsByGroupTransaction} from "@/services/DebtService";
+import {getAllDebtsByGroupTransaction, putPaidAt} from "@/services/DebtService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useDebtDataGroupTransaction(groupTransactionId: number) {
@@ -31,17 +31,20 @@ export function useDebtDataGroupTransaction(groupTransactionId: number) {
 //     return query;
 // }
 
-// export function useGroupUpdate() {
-//     const queryClient = useQueryClient();
-//     const mutate = useMutation({
-//         mutationFn:  updateGroup,
-//         onSuccess: () => {  
-//             queryClient.invalidateQueries({ queryKey: ['groups-data-by-user'] });
-//         }
-//     });
-
-//     return mutate;
-// }
+export function usePaidAtUpdate({ id, date }: { id: number | null; date: Date | null }) {
+    const queryClient = useQueryClient();
+  
+    return useMutation({
+      mutationFn: () => {
+        //if (!id || !date) return Promise.reject(new Error("ID and date are required"));
+        //const formattedDate = date.toISOString(); // Format date if provided
+        return putPaidAt(id, date);
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['groups-data-by-debt'] });
+      },
+    });
+}
 
 // export function useJoinGroup() {
 //     const queryClient = useQueryClient();
