@@ -27,10 +27,11 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Trash2 } from "lucide-react"
+import { Plus, PlusCircle, Trash2 } from "lucide-react"
 import { getUserLocalStorage } from "@/context/AuthProvider/util"
 import { message } from "antd"
 import { generateColor } from "./listGroup/GroupAvatars"
+import { SaveModal } from "./group-transaction/SaveModal"
 import { ListTransaction } from "./transactions/ListTransactions"
 
 interface TabGroupProps {
@@ -39,7 +40,16 @@ interface TabGroupProps {
   
 export function TabGroup({ group }: TabGroupProps) {
     const currentUserId  = Number(getUserLocalStorage()?.id); 
-  
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const handleClose = () => {
+      setIsDialogOpen(false);
+    };  
+
+    const handleOpen = () => {
+      setIsDialogOpen(true);
+    }; 
+
     return (
       <Tabs defaultValue="expenses">
       <TabsList
@@ -61,8 +71,14 @@ export function TabGroup({ group }: TabGroupProps) {
   
         <TabsContent value="expenses" className="w-full">
           <Card>
-            <CardHeader>
+            <CardHeader className="flex-row justify-between items-center px-10">
               <CardTitle>Despesas</CardTitle>
+              <Button
+                variant="divideActive"
+                onClick={handleOpen}
+              >
+                Nova despesa
+          </Button>
             </CardHeader>
             <CardContent className="space-y-2">
               <ListTransaction groupId={group.id} />
@@ -105,6 +121,15 @@ export function TabGroup({ group }: TabGroupProps) {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {isDialogOpen && (
+        <SaveModal
+          isOpen={isDialogOpen}
+          onClose={handleClose}
+          groupId={group.id}
+        />
+      )}
+
       </Tabs>
     );
   }

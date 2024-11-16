@@ -2,6 +2,8 @@ import axios from "axios";
 import { deleteUserLocalStorage } from "@/context/AuthProvider/util";
 import { message } from 'antd';
 
+const SESSION_EXPIRED_KEY = "session_expired";
+
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
@@ -23,8 +25,10 @@ export const initializeAxios = (onUnauthorized: { (): void; (): void; }) => {
         if (currentUrl !== '/login') {
           onUnauthorized(); // Calls the callback function to redirect
           deleteUserLocalStorage();
-          message.error("Session expired! Login again.");
-        }
+          message.error({
+            content: "Session expired! Login again.",
+            key: SESSION_EXPIRED_KEY,
+          });        }
       }
       console.log(error);
       return Promise.reject(error);

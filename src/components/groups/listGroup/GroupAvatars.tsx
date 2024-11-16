@@ -1,3 +1,4 @@
+import { formatInitialName } from "@/utils/Formatter";
 import { Avatar, AvatarFallback } from "../../ui/avatar";
 import { IUserResponse } from "@/interfaces/IUser";
 
@@ -30,8 +31,8 @@ export function GroupAvatars({ users, limit = 3 }: GroupAvatarsProps) {
             {displayedUsers.map((user) => (
                 <Avatar key={user.id}>
                     <AvatarFallback className={generateColor(user.id)}>
-                    {user.firstName.charAt(0)}
-                    {user.lastName.charAt(0)}
+                    {formatInitialName(user.firstName.charAt(0))}
+                    {formatInitialName(user.lastName.charAt(0))}
                     </AvatarFallback>
                 </Avatar>
             ))}
