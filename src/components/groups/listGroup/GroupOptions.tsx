@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Edit, Info, Trash } from "lucide-react";
+import { Edit, Info, MoreVertical, Trash } from "lucide-react";
 import { useRef, useState } from "react";
 import { useOnClickOutside } from 'usehooks-ts';
 import { useMediaQuery } from 'react-responsive';
@@ -91,8 +91,10 @@ export function GroupOptions({ group }: GroupOptionsProps) {
       {isDesktop ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <div className="cursor-pointer p-2 rounded-full hover:bg-gray-100 transition-colors">
-              <EllipsisVertical />
+            <div className="cursor-pointer p-2">
+              <Button variant="ghost" className="h-10 w-10 p-0 rounded-full">
+                <MoreVertical />
+              </Button>
             </div>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-40">
