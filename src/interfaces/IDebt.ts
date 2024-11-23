@@ -4,8 +4,8 @@ export interface IDebt{
     id: number;
     amount: number;
     user: IUserResponse;
-    createdAt?: Date;
-    paidAt?: Date;
+    createdAt: Date;
+    paidAt: Date;
 };
 
 export interface IDebtRequest {
