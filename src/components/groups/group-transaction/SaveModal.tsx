@@ -35,6 +35,7 @@ export function SaveModal({isOpen, onClose, groupId}: SaveModelProps) {
       groupId: groupId, 
       debts: [], 
       createdBy: userId, 
+      dueDate: new Date()
   });
 
   const { data: group } = useGroupDataById(groupId);
@@ -59,6 +60,7 @@ export function SaveModal({isOpen, onClose, groupId}: SaveModelProps) {
         groupId: groupId, 
         debts: [], 
         createdBy: userId, 
+        dueDate: new Date()
     })
 
     }

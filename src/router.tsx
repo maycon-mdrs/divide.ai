@@ -11,6 +11,7 @@ import { GroupTransactionDetails } from "@/pages/groups/GroupTransactionDetails"
 import { useEffect } from "react";
 import { initializeAxios } from "./services/api";
 import { GroupDetails } from "./pages/groups/GroupDetails";
+import { AIPrediction } from "./pages/ai/AIPrediction";
 
 function Element({ children }: { children: JSX.Element }) {  
   const navigate = useNavigate();
@@ -58,8 +59,11 @@ export const router = createBrowserRouter([
       {
         path: "/details/:id",
         element: <Element children={<GroupTransactionDetails />} />
+      },
+      {
+        path: "/previsao-ia",
+        element: <Element children={<AIPrediction />} />
       }
-
     ],
   },
   {

@@ -28,6 +28,7 @@ export function EditModal({ isOpen, onClose, groupTransactionId }: EditModalProp
     amount: 0,
     description: '',
     debts: [],
+    dueDate: new Date()
   });
 
   const [memberAmounts, setMemberAmounts] = useState<{ [key: number]: number }>({});
@@ -47,6 +48,7 @@ export function EditModal({ isOpen, onClose, groupTransactionId }: EditModalProp
           id: debt.id,
           amount: debt.amount,
         })),
+        dueDate: new Date(`${transactionData.dueDate}T00:00:00`)
       });
 
       const initialMemberAmounts = transactionData.debts.reduce((acc, debt) => {
@@ -70,13 +72,19 @@ export function EditModal({ isOpen, onClose, groupTransactionId }: EditModalProp
     event.preventDefault();
 
     if (validateAmounts()) {
-      const updatedFormData = buildCompleteFormData();
+      const updatedFormData = {
+        ...formData, 
+        debts: transactionData!.debts.map((debt) => ({
+          id: debt.id,
+          amount: memberAmounts[debt.user.id],
+        })),
+      };
 
-      console.log(updatedFormData);
 
       updateGroupTransaction(updatedFormData, {
         onSuccess: (data) => {
           if (data) {
+            console.log("Enviado" + updatedFormData.dueDate)
             message.success("Despesa de grupo atualizada com sucesso!");
             onClose();
           }
@@ -105,18 +113,6 @@ export function EditModal({ isOpen, onClose, groupTransactionId }: EditModalProp
       return false;
     }
     return true;
-  };
-
-  const buildCompleteFormData = () => {
-    const debts = transactionData!.debts.map((debt) => ({
-      id: debt.id,
-      amount: memberAmounts[debt.user.id]
-    }));
-
-    return {
-      ...formData,
-      debts,
-    };
   };
 
   return (

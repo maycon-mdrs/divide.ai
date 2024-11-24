@@ -7,6 +7,7 @@ export interface IGroupTransactionRequest  {
     id?: number;
     amount: number;
     description: string;
+    dueDate: Date;
     groupId?: number;
     debts: IDebtRequest[];
     createdBy?: number;
