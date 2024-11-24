@@ -37,7 +37,7 @@ export function GroupTransactionDetails() {
           ))}
         </div>
         <div className="block md:hidden">
-          <TabHistoric id={groupTransactionId} />
+          <TabHistoric id={groupTransactionId} idUser={transactionCreatedBy.id}/>
         </div>
         <div className="flex-col hidden md:block md:w-4/12 mx-5 bg-white rounded-md">
           <p className="text-center text-lg mt-5 mb-2 font-bold" >Histórico</p>
