@@ -19,8 +19,9 @@ import { ListDetailTransactions } from "@/components/groups/transactions/ListDet
 import { IDebt } from "@/interfaces/IDebt"
 import { useDebtDataGroupTransaction } from "@/hooks/debt/debtHook";
 
-export function TabHistoric({ id }: { id: number }) {
+export function TabHistoric({ id, idUser }: { id: number, idUser: number}) {
     const { data: debts } = useDebtDataGroupTransaction(id);
+    
 
     return (
         <Tabs defaultValue="expenses">
@@ -48,7 +49,7 @@ export function TabHistoric({ id }: { id: number }) {
                     </CardHeader>
                     <CardContent className="space-y-2">
                         {Array.isArray(debts) && debts.map((debt: IDebt) => (
-                            <ListDetailTransactions debt={debt} idUser={1} />
+                            <ListDetailTransactions debt={debt} idUser={idUser} />
                         ))}
                     </CardContent>
                     <CardFooter>
