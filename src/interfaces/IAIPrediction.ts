@@ -1,6 +1,7 @@
 export interface ExpenseByCategory {
     amount: number;
     categoryName: string;
+    categoryColor: string;
     categoryId: number; 
 }
   

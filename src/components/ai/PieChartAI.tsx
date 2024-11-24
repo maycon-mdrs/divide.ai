@@ -22,7 +22,7 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
 }
 
 interface PiechartProps {
-    data: { amount: number; categoryName: string }[];
+    data: { amount: number; categoryName: string, categoryColor: string }[];
     isPending?: Boolean; 
   }
   
@@ -39,6 +39,7 @@ interface PiechartProps {
     const chartData = data.map((item) => ({
       value: item.amount,
       label: item.categoryName,
+      color: item.categoryColor
     }));
   
     const totalValue = formatMoney(data.reduce((acc, curr) => acc + curr.amount, 0));
