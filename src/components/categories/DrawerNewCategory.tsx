@@ -22,23 +22,16 @@ export function DrawerNewCategory() {
 };
 
 const handleCategorySave = (values: ICategory) => {
-  setLoading(true);
-  setTimeout(() => {
-    setIsDialogOpen(true); 
-    setLoading(false);
-
     createCategory(values, {
       onSuccess: () => {
         message.success("Categoria criada com sucesso!");
         setIsOpen(false);  
-        setIsDialogOpen(false); 
       },
       onError: (error: any) => {
         message.error(`Erro ao criar categoria: ${error.message}`);
-        setIsDialogOpen(false); 
       }
     });
-  }, 500);
+
 };
 
   return (
