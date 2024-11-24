@@ -5,13 +5,17 @@ import { ListDetailTransactions } from '@/components/groups/transactions/ListDet
 import { CardHistoric } from '@/components/groups/transactions/CardHistoric';
 import { TabHistoric } from '@/components/groups/transactions/TabHistoricMobile';
 import { IDebt } from "@/interfaces/IDebt";
-
+import { useLocation } from "react-router-dom";
 
 
 export function GroupTransactionDetails() {
   const { id } = useParams();
   const groupTransactionId = Number(id);
   const { data: debts } = useDebtDataGroupTransaction(groupTransactionId);
+  const location = useLocation();
+  const { transactionCreatedBy } = location.state;
+
+  console.log("Transaction ID:", transactionCreatedBy);
 
   if (!debts) {
     return <div className="flex justify-center items-center">Debts não encontrado.</div>;
@@ -28,7 +32,7 @@ export function GroupTransactionDetails() {
       <div className="flex justify-around">
         <div className="flex-col  hidden md:block w-full md:w-7/12">
           {Array.isArray(debts) && debts.map((debt: IDebt) => (
-            <ListDetailTransactions debt={debt} idUser={1} />
+            <ListDetailTransactions debt={debt} idUser={transactionCreatedBy.id} />
 
           ))}
         </div>

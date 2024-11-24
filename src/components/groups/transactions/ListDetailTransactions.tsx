@@ -4,8 +4,7 @@ import { Avatar, AvatarFallback } from "../../ui/avatar";
 import { IDebt } from "@/interfaces/IDebt";
 import { EditPagament } from "@/components/groups/transactions/EditPagament";
 import { getUserLocalStorage } from '@/context/AuthProvider/util';
-
-
+import { useLocation } from "react-router-dom";
 
 
 export function valueFormatter(value: number | null) {
@@ -13,6 +12,8 @@ export function valueFormatter(value: number | null) {
 }
 export function ListDetailTransactions({ debt, idUser }: { debt: IDebt, idUser: number}) {
   const idUserLog = getUserLocalStorage()?.id || null;
+  
+  
 
   return (
     <div>
@@ -39,7 +40,7 @@ export function ListDetailTransactions({ debt, idUser }: { debt: IDebt, idUser: 
               {debt.paidAt ? 'Pago' : 'Não pago'}
 
             </span> <span className="text-[#b3b1b1] mt-1 px-1 text-[10px]">{formatDateTime(debt.paidAt)}</span>
-            {352 == idUserLog && (
+            {idUser == idUserLog && (
               <EditPagament debt={debt}/>
             )}
           </div>
