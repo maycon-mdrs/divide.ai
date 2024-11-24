@@ -30,4 +30,5 @@ export interface IGroupTransaction {
   createdBy: IUser;
   debts: IDebt[];
   dueDate: Date;
+  createdAt: Date;
 }

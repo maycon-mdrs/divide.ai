@@ -15,7 +15,7 @@ export const formatDate = (date: string | Date) => {
   if (!date) return;
 
   try {
-    return format(new Date(date), 'dd/MM/yyyy');
+    return format(new Date(date), 'dd/MM/yyyy', { locale: ptBR });
   }
   catch {
     return "";
