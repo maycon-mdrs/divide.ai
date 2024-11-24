@@ -29,4 +29,5 @@ export interface IGroupTransaction {
   group: IGroup;
   createdBy: IUser;
   debts: IDebt[];
+  dueDate: Date;
 }

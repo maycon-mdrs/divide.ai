@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { message } from "antd";
 import { useState } from "react";
 import { EditModal } from "../group-transaction/EditModal";
+import { useNavigate } from "react-router-dom";
 
 export function ListTransaction({ groupId }: { groupId: number }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -21,6 +22,8 @@ export function ListTransaction({ groupId }: { groupId: number }) {
   const isMobile = useMediaQuery({ maxWidth: 500 });
   const userId = useAuth().id;
 
+  const navigate = useNavigate();
+  
   const handleDelete = () => {
     deleteTransacion({ groupId, transactionId: selectedTransactionId! }, {
       onSuccess: () => {
@@ -42,7 +45,7 @@ export function ListTransaction({ groupId }: { groupId: number }) {
     <>
       <div className="flex flex-col gap-5">
         {data?.map((transaction) => (
-          <div className="flex cursor-pointer hover:bg-muted p-5 rounded-md" key={transaction.id}>
+          <div className="flex cursor-pointer hover:bg-muted p-5 rounded-md" key={transaction.id} onClick={() => navigate(`/details/${transaction.id}`, { state: { transactionCreatedBy: transaction.createdBy } })}>
             <div className="space-y-1">
               <p className="text-sm font-medium leading-none">
                 {truncateText(transaction.description, isMobile ? 20 : 50)}
