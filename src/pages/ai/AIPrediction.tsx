@@ -1,20 +1,18 @@
 
 import { ListCardsAI } from "@/components/ai/ListCardsAI";
 import { SheetMenu } from "@/components/global/sidebar/SheetMenu";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
-import { Alert } from "antd";
-import { useEffect, useState } from "react";
-import { ExpenseByCategory, IAIPrediction, IAIPredictionRequest } from "@/interfaces/IAIPrediction";
+import { Alert, message } from "antd";
+import { useState } from "react";
 import { Piechart } from "@/components/ai/PieChartAI";
 import { LoadingOutlined } from '@ant-design/icons';
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAIPredictionData, useAIPredictionMutate } from "@/hooks/ai/aiPredictionHook";
 import { getUserLocalStorage } from "@/context/AuthProvider/util";
-import { getCategoryById } from "@/services/CategoryService";
+import { useTransactionDataByUser } from "@/hooks/transacion/transacionHook";
 
 export function AIPrediction() {
   const { data } = useAIPredictionData();
@@ -23,10 +21,20 @@ export function AIPrediction() {
   const isPending = mutation.isPending;
 
   const [inputValue, setInputValue] = useState<string>("");
+  const { data: transactionsDataByUser } = useTransactionDataByUser();
 
   const fetchPrediction = async () => {
+
+    console.log("isPending: " + isPending);
+    console.log("Data: " + data);
+    console.log("nEXTByca: " + data?.nextExpensesByCategory)
     const id = getUserLocalStorage()?.id;
     if(!id) return;
+
+    if (!transactionsDataByUser || transactionsDataByUser.length === 0) {
+      message.error("Nenhuma Transação cadastrada! Não é possível gerar previsão.");
+      return;
+    }
 
     mutation.mutate({ 
       userId: id,
@@ -79,10 +87,14 @@ export function AIPrediction() {
           <CardTitle>Despesas por categoria no próximo mês</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-1 justify-center items-center pt-10">
-          {(data && data.nextExpensesByCategory.length > 0)|| isPending ? (
+          {isPending ? (
+                <div className="relative w-48 h-48">
+                  <Skeleton className="absolute inset-0 rounded-full" />
+                  <div className="absolute top-[15%] left-[15%] w-[70%] h-[70%] rounded-full bg-white"></div>
+                </div>
+          ) : data?.nextExpensesByCategory && data.nextExpensesByCategory.length > 0 ? (
             <Piechart
-              isPending={isPending}
-              data={data!.nextExpensesByCategory}
+              data={data.nextExpensesByCategory}
             />
           ) : (
             <div style={{ textAlign: "center", marginTop: "20px" }}>
