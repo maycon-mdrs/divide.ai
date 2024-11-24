@@ -1,11 +1,7 @@
 export interface ExpenseByCategory {
     amount: number;
+    categoryName: string;
     categoryId: number; 
-}
-
-export interface ExpenseByCategoryWithName {
-  amount: number;
-  categoryName: string;
 }
   
 export interface IAIPrediction {

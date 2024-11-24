@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
 import { Alert } from "antd";
 import { useEffect, useState } from "react";
-import { ExpenseByCategory, ExpenseByCategoryWithName, IAIPrediction, IAIPredictionRequest } from "@/interfaces/IAIPrediction";
+import { ExpenseByCategory, IAIPrediction, IAIPredictionRequest } from "@/interfaces/IAIPrediction";
 import { Piechart } from "@/components/ai/PieChartAI";
 import { LoadingOutlined } from '@ant-design/icons';
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,41 +23,6 @@ export function AIPrediction() {
   const isPending = mutation.isPending;
 
   const [inputValue, setInputValue] = useState<string>("");
-
-  const [expensesByCategoryWithNames, setExpensesByCategoryWithNames] = useState<ExpenseByCategoryWithName[]>([]);
-
-  useEffect(() => {
-    async function fetchCategoryNames() {
-      if (data?.nextExpensesByCategory && data.nextExpensesByCategory.length > 0) {
-        try {
-          const expenseMap = new Map<number, number>();
-  
-          data.nextExpensesByCategory.forEach((item) => {
-            const currentAmount = expenseMap.get(item.categoryId) || 0;
-            expenseMap.set(item.categoryId, currentAmount + item.amount);
-          });
-  
-          const categoriesWithNames: ExpenseByCategoryWithName[] = await Promise.all(
-            Array.from(expenseMap.entries()).map(async ([categoryId, totalAmount]) => {
-              const category = await getCategoryById(categoryId);
-              return {
-                amount: totalAmount,
-                categoryName: category?.name || "Desconhecido",
-              };
-            })
-          );
-  
-          setExpensesByCategoryWithNames(categoriesWithNames);
-        } catch (error) {
-          console.error("Erro ao buscar nomes das categorias:", error);
-        }
-      } else {
-        setExpensesByCategoryWithNames([]);
-      }
-    }
-  
-    fetchCategoryNames();
-  }, [data?.nextExpensesByCategory]);
 
   const fetchPrediction = async () => {
     const id = getUserLocalStorage()?.id;
@@ -114,10 +79,10 @@ export function AIPrediction() {
           <CardTitle>Despesas por categoria no próximo mês</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-1 justify-center items-center pt-10">
-          {expensesByCategoryWithNames.length > 0 || isPending ? (
+          {(data && data.nextExpensesByCategory.length > 0)|| isPending ? (
             <Piechart
               isPending={isPending}
-              data={expensesByCategoryWithNames}
+              data={data!.nextExpensesByCategory}
             />
           ) : (
             <div style={{ textAlign: "center", marginTop: "20px" }}>
