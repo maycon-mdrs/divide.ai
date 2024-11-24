@@ -35,3 +35,13 @@ export const formatDateTime = (date: string | Date) => {
     return "";
   }
 };
+
+export const formatMonthYear = (date: string | Date) => {
+  if (!date) return "";
+
+  try {
+    return format(new Date(date), 'MMMM/yyyy', { locale: ptBR });
+  } catch {
+    return "";
+  }
+}

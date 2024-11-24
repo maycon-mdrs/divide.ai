@@ -1,6 +1,8 @@
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import { formatMoney } from '@/utils/Formatter';
+import { useTransactionByMonth } from '@/hooks/transacion/transacionHook';
+import { VWTransaction } from '@/types/VWTransaction';
 
 const chartSetting = {
   // yAxis: [
@@ -11,14 +13,24 @@ const chartSetting = {
   maxwidth: 600,
   height: 300,
   sx: {
-    touchAction: 'pan-y', 
+    touchAction: 'pan-y',
     [`.${axisClasses.left} .${axisClasses.label}`]: {
       transform: 'translate(-20px, 0)',
     },
   },
 };
 
-export function Dashboard() {
+interface DashboardProps {
+  data?: VWTransaction[];
+}
+
+export function Dashboard({ data }: DashboardProps) {
+  const dataset = data ? data.map((transaction: VWTransaction) => ({
+    entrada: transaction.totalIncome,
+    saida: Math.abs(transaction.totalExpenses),
+    month: new Date(transaction.year, transaction.month - 1).toLocaleString('default', { month: 'long' }),
+  })) : [];
+
   return (
     <BarChart
       dataset={dataset}
@@ -31,24 +43,6 @@ export function Dashboard() {
     />
   );
 }
-
-export const dataset = [
-  {
-    entrada: 59,
-    saida: 57,
-    month: 'Janeiro',
-  },
-  {
-    entrada: 50,
-    saida: 52,
-    month: 'Fevereiro',
-  },
-  {
-    entrada: 47,
-    saida: 53,
-    month: 'Março',
-  },
-];
 
 export function valueFormatter(value: number | null) {
   return formatMoney(value);

@@ -2,6 +2,8 @@ import { api } from '@/services/api';
 import { ITransacion, ITransacionResponse } from '@/interfaces/ITransacion';
 import { ApiResponse } from '@/interfaces/ApiResponse';
 import { getUserLocalStorage } from '@/context/AuthProvider/util';
+import { VWTransaction } from '@/types/VWTransaction';
+import { VWTransactionByCategory } from '@/types/VWTransactionByCategory';
 
 export async function getAllTransacions(): Promise<ITransacion[] | null> {
   try {
@@ -49,6 +51,37 @@ export async function getTransacionById(id: number): Promise<ITransacion | null>
   }
 }
 
+export async function getUserTransacionByMonth(): Promise<VWTransaction[] | null> {
+  try {
+    const token = getUserLocalStorage()?.token;
+    const id = getUserLocalStorage()?.id;
+    const response = await api.get<ApiResponse<VWTransaction[]>>(`/user-transactions/transactions/grouped-by-month/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.data.success) return response.data.data;
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
+
+export async function getUserTransacionByCategory(): Promise<VWTransactionByCategory[] | null> {
+  try {
+    const token = getUserLocalStorage()?.token;
+    const id = getUserLocalStorage()?.id;
+    const response = await api.get<ApiResponse<VWTransactionByCategory[]>>(`/user-transactions/transactions/grouped-by-category/${id}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+
+    if (response.data.success) return response.data.data;
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
 export async function createTransacion(transacion: ITransacion): Promise<ITransacion | null> {
   try {

@@ -17,4 +17,5 @@ export interface ITransacionResponse  {
     categoryId?: number;
     userId: number;
     paidAt?: Date | null;
+    createdAt?: Date;
 };
