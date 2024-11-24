@@ -25,9 +25,6 @@ export function AIPrediction() {
 
   const fetchPrediction = async () => {
 
-    console.log("isPending: " + isPending);
-    console.log("Data: " + data);
-    console.log("nEXTByca: " + data?.nextExpensesByCategory)
     const id = getUserLocalStorage()?.id;
     if(!id) return;
 
