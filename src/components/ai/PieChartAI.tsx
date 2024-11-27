@@ -23,18 +23,9 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
 
 interface PiechartProps {
     data: { amount: number; categoryName: string, categoryColor: string }[];
-    isPending?: Boolean; 
   }
   
-  export function Piechart({ data, isPending }: PiechartProps) {
-    if (isPending) {
-      return (
-        <div className="relative w-48 h-48">
-        <Skeleton className="absolute inset-0 rounded-full" />
-        <div className="absolute top-[15%] left-[15%] w-[70%] h-[70%] rounded-full bg-white"></div>
-      </div>
-      );
-    }
+  export function Piechart({ data }: PiechartProps) {
   
     const chartData = data.map((item) => ({
       value: item.amount,
