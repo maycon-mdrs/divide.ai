@@ -41,6 +41,10 @@ export function ListTransaction({ groupId }: { groupId: number }) {
     setIsEditDialogOpen(true);
   };
 
+  const handleClick = (event: React.MouseEvent) => {
+    event.stopPropagation(); 
+  };
+
   return (
     <>
       <div className="flex flex-col gap-5">
@@ -54,9 +58,9 @@ export function ListTransaction({ groupId }: { groupId: number }) {
             </div>
             <div className="ml-auto font-medium">
               {formatMoney(transaction.amount)}
-              <p className="text-sm text-muted-foreground">{formatDate("05/11/2024")}</p>
+              <p className="text-sm text-muted-foreground">{formatDate(transaction.createdAt)}</p>
             </div>
-            <div className="ml-4">
+            <div className="ml-4" onClick={handleClick}>
               {transaction.createdBy.id == userId && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

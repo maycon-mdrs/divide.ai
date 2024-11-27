@@ -6,10 +6,14 @@ import { Piechart } from "@/components/home/Piechart";
 import { DrawerTransition } from "@/components/newTransition/DrawerTransition";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTransactionByMonth } from "@/hooks/transacion/transacionHook";
+import { VWTransaction } from "@/types/VWTransaction";
 import { useNavigate } from "react-router-dom";
 
 export function HomePage() {
 	const navigate = useNavigate();
+	const { data } = useTransactionByMonth();
+
 	return (
 		<div className="flex-1 space-y-4 p-4 pt-6 lg:mx-10">
 			{/* Sidebar mobile */}
@@ -20,9 +24,9 @@ export function HomePage() {
 					<DrawerTransition />
 				</div>
 			</div>
-			
+
 			{/* Infos Card */}
-			<ListCards />
+			<ListCards data={data ?? undefined} />
 
 			{/* Dashboard & Expenses */}
 			<div className="grid gap-4 md:grid-cols-4 lg:grid-cols-7">
@@ -31,7 +35,7 @@ export function HomePage() {
 						<CardTitle>Overview</CardTitle>
 					</CardHeader>
 					<CardContent className="flex justify-center items-center p-0">
-						<Dashboard />
+						<Dashboard data={data ?? undefined} />
 					</CardContent>
 				</Card>
 

@@ -3,12 +3,14 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { useDrawingArea } from '@mui/x-charts/hooks';
 import { styled } from '@mui/material/styles';
 import { formatMoney } from '@/utils/Formatter';
+import { useTransactionByCategory } from '@/hooks/transacion/transacionHook';
+import { VWTransactionByCategory } from '@/types/VWTransactionByCategory';
 
 const data = [
-  { value: 100, label: 'Casa' },
-  { value: 10, label: 'Comida' },
-  { value: 15, label: 'Festa' },
-  { value: 20, label: '' },
+  { value: 100, label: 'Casa', color: '#FF6384' },
+  { value: 10, label: 'Comida', color: '#36A2EB' },
+  { value: 15, label: 'Festa', color: '#FFCE56' },
+  { value: 20, label: '', color: '#4BC0C0' },
 ];
 
 const size = {
@@ -37,8 +39,27 @@ function PieCenterLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Piechart() {
-  const totalValue = formatMoney(data.reduce((acc, curr) => acc + curr.value, 0));
+export function Piechart() { 
+  const { data: transactionByCategory } = useTransactionByCategory();
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
+
+  console.log("mes: ", currentMonth, "ano: ", currentYear);
+
+  const data = transactionByCategory ? transactionByCategory
+    .filter((transaction: VWTransactionByCategory) => {
+      return transaction.amount < 0 &&
+        transaction.month === currentMonth &&
+        transaction.year === currentYear;
+    })
+    .map((transaction: VWTransactionByCategory) => ({
+      value: Math.abs(transaction.amount),
+      label: transaction.categoryName,
+      color: transaction.color,
+    })) : [];
+
+  const totalValue = data.length > 0 ? formatMoney(data.reduce((acc, curr) => acc + curr.value, 0)) : null;
 
   return (
     <PieChart series={[{ data, innerRadius: 70, valueFormatter: (value) => formatMoney(value.value) }]} {...size}>
